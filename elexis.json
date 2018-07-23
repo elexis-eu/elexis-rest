@@ -1,16 +1,63 @@
 {
     "info": {
-        "version": "1.0.0", 
-        "title": "ELEXIS Protocol for accessing dictionaries"
+        "version": "Draft",
+        "title": "ELEXIS Protocol for accessing dictionaries",
+        "description": "This protocol allows data to be shared with the ELEXIS platform and should be implemented by all providers of data to the ELEXIS platform"
     }, 
     "paths": {
-        "/about": {
+        "/dictionaries": {
             "get": {
-                "summary": "About the dictionary",
-                "description": "The default conditions under which this entry can be included in the ELEXIS Matrix Dictionary. May be superseded by entry or element-level constraints",
+                "summary": "Get dictionaries",
+                "description": "List all of the dictionaries that are available at this endpoint",
                 "parameters": [],
                 "responses": {
                     "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "dictionaries": {
+                                            "type": "array",
+                                            "description": "An array of identifiers for resources",
+                                            "minItems": 1,
+                                            "uniqueItems": true,
+                                            "items": {
+                                                "type": "string"
+                                            },
+                                            "example": ["dict1","dict2"]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": { 
+                        "$ref": "#/components/server_error"
+                    }
+                },
+                "operationId": "dictionaries"
+            }
+        },
+        "/about/{dictionary}": {
+            "get": {
+                "summary": "About the dictionary",
+                "description": "The default conditions under which this entry can be included in the ELEXIS Matrix Dictionary. May be superseded by entry or element-level constraints",
+                "parameters": [
+                    {
+                        "required": true,
+                        "in": "path",
+                        "name": "dictionary",
+                        "description": "The dictionary to describe",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -18,16 +65,31 @@
                                 }
                             }
                         }
+                    },
+                    "404": {
+                        "description": "Dictionary not found (identifier not known)"
+                    },
+                    "500": {
+                        "$ref": "#/components/server_error"
                     }
                 },
                 "operationId": "about"
             }
         },
-        "/list": {
+        "/list/{dictionary}": {
             "get": {
                 "summary": "Get all headwords",
                 "description": "Get all of the entries contained within this dictionary",
                 "parameters": [
+                    {
+                        "required": true,
+                        "in": "path",
+                        "name": "dictionary",
+                        "description": "The dictionary to list",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
                     {
                         "required": false, 
                         "in": "query", 
@@ -63,16 +125,31 @@
                             }
                         }, 
                         "description": "The entries matching with this lemma as headwords"
+                    },
+                    "404": {
+                        "description": "Dictionary not found (identifier not known)"
+                    },
+                    "500": {
+                        "$ref": "#/components/server_error"
                     }
-                }, 
+                },
                  "operationId": "getAll"
             }
         },
-       "/lemma/{headword}": {
+       "/lemma/{dictionary}/{headword}": {
             "get": {
                 "summary": "Headword lookup",
                 "description": "Given a headword, find all the entries that are listed under this headword",
                 "parameters": [
+                    {
+                        "required": true,
+                        "in": "path",
+                        "name": "dictionary",
+                        "description": "The dictionary containing the entries",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
                     {
                         "required": true, 
                         "in": "path", 
@@ -182,26 +259,29 @@
                         "description": "The entries matching with this lemma as headwords"
                     },
                     "404": {
-                        "description": "Indicates that no entries matched the given query"
+                        "description": "Dictionary not found (identifier not known)"
+                    },
+                    "500": {
+                        "$ref": "#/components/server_error"
                     }
-                }, 
+                 }, 
                  "operationId": "getByLemma"
             }
         }, 
-        "/xml/{id}": {
+        "/entry/{dictionary}/{id}": {
             "get": {
-                "summary": "Entry XML",
-                "description": "Return the TEI-Lex0 representation of the document",
+                "summary": "Entry as JSON",
+                "description": "Return the Entry directly as a JSON document. Services must implement at least one of the `/entry`, `/rdf` or `/ttl` actions.",
                 "responses": {
                     "200": {
                         "content": {
-                            "text/xml": {
+                            "application/json": {
                                 "schema": {
-                                    "description": "A TEI-Lex0 document, see description TBD"
+                                    "$ref": "#/components/ontolex/entry"
                                 }
                             }
-                        }, 
-                        "description": "The entry identified by this ID",
+                        },
+                        "description": "Success",
                         "headers": {
                             "last-modified": {
                                 "name": "Last-Modified",
@@ -210,13 +290,134 @@
                         }
                     },
                     "301": {
-                        "description": "Indicates that the ID of this resource has been changed"
+                        "description": "ID Updated (this entry has changed its ID)"
                     },
                     "404": {
-                        "description": "Indicates that no entry is available at this ID, possibly because it has been deleted"
+                        "description": "No Entry Availble (the dictionary or entry ID is not known or the entry has been deleted)"
+                    },
+                    "500": {
+                        "$ref": "#/components/server_error"
                     }
+ 
                 }, 
                 "parameters": [
+                    {
+                        "required": true,
+                        "in": "path",
+                        "name": "dictionary",
+                        "description": "The dictionary containing the entry",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "required": true, 
+                        "in": "path", 
+                        "name": "id", 
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ], 
+                "operationId": "getEntryById"
+            }
+        }, 
+        "/ttl/{dictionary}/{id}": {
+            "get": {
+                "summary": "Entry as Turtle",
+                "description": "Return the dictionary entry as an RDF Turtle Document. Services must implement at least one of the `/entry`, `/rdf` or `/ttl` actions.",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "text/turtle": {
+                                "example": "@prefix ontolex: @prefix ontolex: <http://www.w3.org/ns/lemon/ontolex#> .\n@prefix lexinfo: <http://lexinfo.net/ontology/3.0/lexinfo/>.\n@prefix skos: <http://www.w3.org/2004/02/skos/core# >\n\n<> a ontolex:LexicalEntry\n  ontolex:canonicalForm [\n  ontolex:writtenRep \"example\"@en ] ;\n  lexinfo:partOfSpeech lexinfo:noun ;\n  ontolex:denotes [\n    skos:definition \"An example OntoLex Entry\"@en ] ."
+                            }
+                        }, 
+                        "description": "Success",
+                        "headers": {
+                            "last-modified": {
+                                "name": "Last-Modified",
+                                "description": "When this entry was last modified, formatted according to https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Last-Modified"
+                            }
+                        }
+                    },
+                    "301": {
+                        "description": "ID Updated (this entry has changed its ID)"
+                    },
+                    "404": {
+                        "description": "No Entry Availble (the dictionary or entry ID is not known or the entry has been deleted)"
+                    },
+                    "500": {
+                        "$ref": "#/components/server_error"
+                    }
+ 
+                }, 
+                "parameters": [
+                    {
+                        "required": true,
+                        "in": "path",
+                        "name": "dictionary",
+                        "description": "The dictionary containing the entry",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "required": true, 
+                        "in": "path", 
+                        "name": "id", 
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ], 
+                "operationId": "getEntryById"
+            }
+        },
+        "/xml/{dictionary}/{id}": {
+            "get": {
+                "summary": "Entry XML",
+                "description": "Return the TEI-Lex0 representation of the document. Services must implement at least one of the `/entry`, `/rdf` or `/ttl` actions.",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "text/xml": {
+                                    "example": "<entry xml:id=\"id\">\n  <form type=\"lemma\"><orth>example</orth></form>\n  <gramGrp>\n  <pos norm=\"NN\">noun</pos>\n  </gramGrp>\n  <sense n=\"1\">\n    <def>An example TEI-Lex0 Entry</def>\n  </sense>\n</entry>",
+                                "schema": {
+                                    "description": "A TEI-Lex0 document, see description TBD",
+                                    "example": "<entry xml:id=\"foo\"></entry>"
+                                }
+                            }
+                        }, 
+                        "description": "Success",
+                        "headers": {
+                            "last-modified": {
+                                "name": "Last-Modified",
+                                "description": "When this entry was last modified, formatted according to https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Last-Modified"
+                            }
+                        }
+                    },
+                    "301": {
+                        "description": "ID Updated (this entry has changed its ID)"
+                    },
+                    "404": {
+                        "description": "No Entry Availble (the dictionary or entry ID is not known or the entry has been deleted)"
+                    },
+                    "500": {
+                        "$ref": "#/components/server_error"
+                    }
+ 
+                }, 
+                "parameters": [
+                    {
+                        "required": true,
+                        "in": "path",
+                        "name": "dictionary",
+                        "description": "The dictionary containing the entry",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
                     {
                         "required": true, 
                         "in": "path", 
@@ -290,6 +491,20 @@
                             ], 
                             "type": "string"
                         }
+                    },
+                    "formats": {
+                        "type": "array",
+                        "description": "The formats that this resource is available in. They are as follows\n - *TEI-LEX*: This document is available as TEI-Lex0 from the `/xml` path\n - *ONTOLEX-JSON*: This document is available as OntoLex-Lemon in JSON-LD markup from the `/entry` path\n - *ONTOLEX-TTL*: The document is available as OntoLex-Lemon in Turtle from the `/ttl` path",
+                        "minItems": 1,
+                        "uniqueItems": true,
+                        "items": {
+                            "enum": [
+                                "TEI-LEX",
+                                "ONTOLEX-JSON",
+                                "ONTOLEX-TTL"
+                            ],
+                            "type": "string"
+                        }
                     }
                 }, 
                 "type": "object"
@@ -301,24 +516,182 @@
                         "description": "The conditions under which this entry can be included in the ELEXIS Matrix Dictionary",
                         "enum": [
                             "PUBLIC", 
-                            "ATTR", 
-                            "SHAREALIKE", 
                             "NONCOMMERCIAL", 
                             "RESEARCH", 
                             "PRIVATE"
                         ], 
-                        "required": "true",
+                        "required": true,
                         "type": "string"
                     }, 
-                    "language": {
-                        "description": "A language code following the ISO 639-1,2,3 standard. If a (two-letter) ISO 639-1 code exists this should be used in preference",
-                        "pattern": "\\w{2,3}", 
+                    "languages": {
+                        "type": "object",
+                        "minItems": 1,
+                        "uniqueItems": true,
+                        "items": {
+                            "description": "A language code following the ISO 639-1,2,3 standard. If a (two-letter) ISO 639-1 code exists this should be used in preference",
+                            "pattern": "\\w{2,3}", 
+                            "type": "string",
+                            "required": true,
+                            "example": "en"
+                        },
+                        "example": ["en", "de"]
+                    },
+                    "license": {
+                        "description": "The license that can be used to republish this data",
+                        "required": "true",
+                        "pattern": "https?:.*",
+                        "example": "https://creativecommons.org/licenses/by/4.0/"
+                    },
+                    "title": {
+                        "description": "The title of the resource",
+                        "required": "true",
                         "type": "string",
-                        "example": "en"
+                        "example": "The Human-Readable Name of This Resource"
+                    },
+                    "creator": {
+                        "description": "The creator of the resource",
+                        "required": "true",
+                        "type": "string",
+                        "example": "Institute of This Resource"
+                    },
+                    "publisher": {
+                        "description": "The publisher of This Resource",
+                        "required": "true",
+                        "type": "string",
+                        "example": "Publishing Company"
+                    }
+                }
+            }
+        },
+        "ontolex": {
+            "entry": {
+                "type": "object",
+                "properties": {
+                    "@context": {
+                        "type": "string",
+                        "required": "true",
+                        "description": "The JSON-LD Context Document, which should be derived from the OntoLex JSON spec"
+                    },
+                    "@id": {
+                        "type": "string",
+                        "description": "The identifier of this resource",
+                        "example": ""
+                    },
+                    "@type": {
+                        "type": "string",
+                        "description": "The type of this entry",
+                        "enum": ["LexicalEntry", "Word", "MultiWordExpression", "Affix"]
+                    },
+                    "canonicalForm": {
+                        "type": "object",
+                        "description": "The canonical form property relates a lexical entry to its canonical or dictionary form. This usually indicates the \"lemma\" form of a lexical entry.",
+                        "properties": {
+                            "writtenRep": {
+                                "description": "The written representation property indicates the written representation of a form.",
+                                "example": "entry"
+                            },
+                            "phoneticRep": {
+                                "description": "The phonetic representation property indicates one phonetic representation of the pronunciation of the form using a scheme such as the International Phonetic Alphabet (IPA)."
+                            }
+                        }
+                    },
+                    "otherForm": {
+                        "type": "array",
+                        "description": "The other form property relates a lexical entry to a non-preferred (\"non-lemma\") form that realizes the given lexical entry.",
+                        "items": {
+                            "$ref": "#/components/ontolex/Form"
+                        }
+                    },
+                    "morphologicalPattern": {
+                        "type": "string",
+                        "description": "The morphological pattern property indicates the morphological class of a word.",
+                        "example": "first-declension"
+                    },
+                    "denotes": {
+                        "type": "array",
+                        "description": "The denotes property relates a lexical entry to a predicate in a given ontology that represents its meaning and has some denotational or model-theoretic semantics.",
+                        "items": {
+                            "$ref": "#/components/ontolex/Reference"
+                        }
+                    },
+                    "sense": {
+                        "type": "array",
+                        "description": "The sense property relates a lexical entry to one of its lexical senses.",
+                        "items": {
+                            "$ref": "#/components/ontolex/LexicalSense"
+                        }
+                    },
+                    "usage": {
+                        "type": "object",
+                        "description": "The usage property indicates usage conditions or pragmatic implications when using the lexical entry to refer to the given ontological meaning.",
+                        "example": { "value": "This is a usage example" }
+                    }
+                },
+                "example": {
+                    "@context": "http://lexinfo.net/jsonld/3.0/content.json",
+                    "@type": "Word",
+                    "language": "en",
+                    "partOfSpeech": "noun",
+                    "canonicalForm": {
+                        "writtenRep": "example"
+                    },
+                    "denotes": {
+                        "definition": "An example OntoLex Entry"
+                    }
+                }
+
+            },
+            "Form": {
+                "type": "object",
+                "properties": {
+                    "writtenRep": {
+                        "description": "The written representation property indicates the written representation of a form.",
+                        "example": "entry"
+                    },
+                    "phoneticRep": {
+                        "description": "The phonetic representation property indicates one phonetic representation of the pronunciation of the form using a scheme such as the International Phonetic Alphabet (IPA)."
+                    }
+                }
+            },
+            "Reference": {
+                "type": "object",
+                "properties": {
+                    "definition": {
+                        "description": "The plain text definition of this concept",
+                        "example": "This is a concept in an ontology"
+                    }
+                }
+            },
+            "LexicalSense": {
+                "type": "object",
+                "properties": {
+                    "reference": {
+                        "required": true,
+                        "description": "The reference property relates a lexical sense to an ontological predicate that represents the denotation of the corresponding lexical entry.",
+                        "example": "http://dbpedia.org/resource/Example"
+                    }
+                }
+            },
+
+        },
+        "server_error": {
+            "description": "Internal Server Error",
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "message": {
+                                "type": "string",
+                                "description": "The error message as plain text",
+                                "example": "Something has gone terribly wrong..."
+                            }
+                        }
                     }
                 }
             }
         }
+
     }, 
     "openapi": "3.0.0"
 }
