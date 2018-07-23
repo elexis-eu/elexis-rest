@@ -1,0 +1,324 @@
+{
+    "info": {
+        "version": "1.0.0", 
+        "title": "ELEXIS Protocol for accessing dictionaries"
+    }, 
+    "paths": {
+        "/about": {
+            "get": {
+                "summary": "About the dictionary",
+                "description": "The default conditions under which this entry can be included in the ELEXIS Matrix Dictionary. May be superseded by entry or element-level constraints",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/metadata"
+                                }
+                            }
+                        }
+                    }
+                },
+                "operationId": "about"
+            }
+        },
+        "/list": {
+            "get": {
+                "summary": "Get all headwords",
+                "description": "Get all of the entries contained within this dictionary",
+                "parameters": [
+                    {
+                        "required": false, 
+                        "in": "query", 
+                        "name": "limit", 
+                        "description": "The maximum number of entries to return",
+                        "schema": {
+                            "minimum": 1, 
+                            "type": "integer"
+                        }
+                    }, 
+                    {
+                        "required": false, 
+                        "in": "query", 
+                        "name": "offset", 
+                        "description": "The offset (index of first entry) to return",
+                        "schema": {
+                            "default": 0, 
+                            "minimum": 0, 
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/entry"
+                                    }, 
+                                    "type": "array"
+                                }
+                            }
+                        }, 
+                        "description": "The entries matching with this lemma as headwords"
+                    }
+                }, 
+                 "operationId": "getAll"
+            }
+        },
+       "/lemma/{headword}": {
+            "get": {
+                "summary": "Headword lookup",
+                "description": "Given a headword, find all the entries that are listed under this headword",
+                "parameters": [
+                    {
+                        "required": true, 
+                        "in": "path", 
+                        "name": "lemma", 
+                        "description": "The lemma of the headword to lookup",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }, 
+                    {
+                        "required": false, 
+                        "in": "query", 
+                        "name": "language", 
+                        "description": "A language code following the ISO 639-1,2,3 standard. If a (two-letter) ISO 639-1 code exists this should be used in preference",
+                        "example": "en",
+                        "examples": [{
+                            "english": {
+                                "summary": "English",
+                                "value": "en"
+                            }, 
+                            "german": {
+                                "summary": "German",
+                                "value": "de"
+                            }, 
+                            "old_english": {
+                                "summary": "Old English",
+                                "value": "ang"
+                            }
+                        }],
+                        "schema": {
+                            "pattern": "\\w{2,3}", 
+                            "type": "string"
+                        }
+                    }, 
+                    {
+                        "required": false, 
+                        "in": "query", 
+                        "name": "partOfSpeech", 
+                        "description": "A part of speech tag that the entry has, this must be one of the value from the Universal Part-of-Speech Tagset (http://universaldependencies.org/u/pos/)",
+                        "schema": {
+                            "enum": [
+                                "ADJ", 
+                                "ADP", 
+                                "ADV", 
+                                "AUX", 
+                                "CCONJ", 
+                                "DET", 
+                                "INTJ", 
+                                "NOUN", 
+                                "NUM", 
+                                "PART", 
+                                "PRON", 
+                                "PROPN", 
+                                "PUNCT", 
+                                "SCONJ", 
+                                "SYM", 
+                                "VERB", 
+                                "X"
+                            ], 
+                            "type": "string"
+                        }
+                    }, 
+                    {
+                        "required": false, 
+                        "in": "query", 
+                        "name": "limit", 
+                        "description": "The maximum number of entries to return",
+                        "schema": {
+                            "minimum": 1, 
+                            "type": "integer"
+                        }
+                    }, 
+                    {
+                        "required": false, 
+                        "in": "query", 
+                        "name": "offset", 
+                        "description": "The offset (index of first entry) to return",
+                        "schema": {
+                            "default": 0, 
+                            "minimum": 0, 
+                            "type": "integer"
+                        }
+                    }, 
+                    {
+                        "required": false, 
+                        "in": "query",
+                        "name": "inflected", 
+                        "description": "If true treat the headword as an inflected form and return all lemmas that may be a form of this headword",
+                        "schema": {
+                            "default": false, 
+                            "type": "boolean"
+                        }
+                    }
+                ], 
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/entry"
+                                    }, 
+                                    "type": "array"
+                                }
+                            }
+                        }, 
+                        "description": "The entries matching with this lemma as headwords"
+                    },
+                    "404": {
+                        "description": "Indicates that no entries matched the given query"
+                    }
+                }, 
+                 "operationId": "getByLemma"
+            }
+        }, 
+        "/xml/{id}": {
+            "get": {
+                "summary": "Entry XML",
+                "description": "Return the TEI-Lex0 representation of the document",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "text/xml": {
+                                "schema": {
+                                    "description": "A TEI-Lex0 document, see description TBD"
+                                }
+                            }
+                        }, 
+                        "description": "The entry identified by this ID",
+                        "headers": {
+                            "last-modified": {
+                                "name": "Last-Modified",
+                                "description": "When this entry was last modified, formatted according to https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Last-Modified"
+                            }
+                        }
+                    },
+                    "301": {
+                        "description": "Indicates that the ID of this resource has been changed"
+                    },
+                    "404": {
+                        "description": "Indicates that no entry is available at this ID, possibly because it has been deleted"
+                    }
+                }, 
+                "parameters": [
+                    {
+                        "required": true, 
+                        "in": "path", 
+                        "name": "id", 
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ], 
+                "operationId": "getEntryById"
+            }
+        } 
+    }, 
+    "components": {
+        "schemas": {
+            "entry": {
+                "properties": {
+                    "release": {
+                        "description": "The conditions under which this entry can be included in the ELEXIS Matrix Dictionary",
+                        "enum": [
+                            "PUBLIC", 
+                            "ATTR", 
+                            "SHAREALIKE", 
+                            "NONCOMMERCIAL", 
+                            "RESEARCH", 
+                            "PRIVATE"
+                        ], 
+                        "required": "true",
+                        "type": "string"
+                    }, 
+                    "lemma": {
+                        "description": "The lemma (headword) of this identifier",
+                        "required": true, 
+                        "type": "string"
+                    }, 
+                    "language": {
+                        "description": "A language code following the ISO 639-1,2,3 standard. If a (two-letter) ISO 639-1 code exists this should be used in preference",
+                        "pattern": "\\w{2,3}", 
+                        "type": "string",
+                        "example": "en"
+                    }, 
+                    "id": {
+                        "description": "A uniquer identifier for the entry",
+                        "required": true, 
+                        "type": "string"
+                    }, 
+                    "partOfSpeech": {
+                        "type": "array",
+                        "description": "A part of speech tag that the entry has, this must be one of the value from the Universal Part-of-Speech Tagset (http://universaldependencies.org/u/pos/)",
+                        "minItems": 1,
+                        "uniqueItems": true,
+                        "items": {
+                            "enum": [
+                                "ADJ", 
+                                "ADP", 
+                                "ADV", 
+                                "AUX", 
+                                "CCONJ", 
+                                "DET", 
+                                "INTJ", 
+                                "NOUN", 
+                                "NUM", 
+                                "PART", 
+                                "PRON", 
+                                "PROPN", 
+                                "PUNCT", 
+                                "SCONJ", 
+                                "SYM", 
+                                "VERB", 
+                                "X"
+                            ], 
+                            "type": "string"
+                        }
+                    }
+                }, 
+                "type": "object"
+            }, 
+            "metadata": {
+                "type": "object", 
+                "properties": {
+                    "release": {
+                        "description": "The conditions under which this entry can be included in the ELEXIS Matrix Dictionary",
+                        "enum": [
+                            "PUBLIC", 
+                            "ATTR", 
+                            "SHAREALIKE", 
+                            "NONCOMMERCIAL", 
+                            "RESEARCH", 
+                            "PRIVATE"
+                        ], 
+                        "required": "true",
+                        "type": "string"
+                    }, 
+                    "language": {
+                        "description": "A language code following the ISO 639-1,2,3 standard. If a (two-letter) ISO 639-1 code exists this should be used in preference",
+                        "pattern": "\\w{2,3}", 
+                        "type": "string",
+                        "example": "en"
+                    }
+                }
+            }
+        }
+    }, 
+    "openapi": "3.0.0"
+}

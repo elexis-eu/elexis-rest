@@ -1,0 +1,152 @@
+openapi: 3.0.0
+info:
+    title: ELEXIS Protocol for accessing dictionaries
+    version: 1.0.0
+paths:
+    /lemma/{headword}:
+        operationId: getByLemma
+        parameters:
+        - name: lemma
+          in: path
+          required: true
+          schema:
+              type: string
+        - name: language
+          in: query
+          required: false
+          schema:
+              type: string
+              pattern: "\\w{2,3}"
+        - name: partOfSpeech
+          in: query
+          required: false
+          schema:
+              type: string
+              # Derived from http://universaldependencies.org/u/pos/
+              enum: ["ADJ", "ADP", "ADV", "AUX", "CCONJ", "DET", "INTJ", "NOUN", "NUM", "PART", "PRON", "PROPN", "PUNCT", "SCONJ", "SYM", "VERB", "X"]
+        - name: limit
+          in: query
+          required: false
+          schema:
+              type: integer
+              minimum: 1
+        - name: offset
+          in: query
+          required: false
+          schema:
+              type: integer
+              minimum: 0
+              default: 0
+        # Also search by inflected forms
+        - name: inflected
+          required: false
+          schema:
+              type: boolean
+              default: false
+        responses:
+            '200':
+                description: The entries matching with this lemma as headwords
+                content:
+                    application/json:
+                        schema:
+                            type: array
+                            items:
+                                $ref: '#/components/schemas/entry'
+    /entry/{id}:
+        operationId: getEntryById
+        parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+              type: string
+        responses:
+            '200':
+                description: The entry identified by this ID
+                content:
+                    # Returns TEI-XML
+                    text/xml:
+                        schema:
+                            type: string
+    /definitions/{id}:
+        operationId: getDefinitionForEntry
+        parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+              type: string
+        responses:
+            '200':
+                description: The senses (definitions) of an entry
+                content:
+                    application/json:
+                        schema:
+                            type: array
+                            items:
+                                $ref: '#/components/schemas/sense'
+    /relations/{id}:
+        operationId: getRelationsForEntry
+        parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+              type: string
+        responses:
+            '200':
+                description: The relations (cross-references) of an entry
+                content:
+                    application/json:
+                        schema:
+                            type: array
+                            items:
+                                $ref: '#/components/schemas/relation'
+components:
+    schemas:
+        entry:
+            type: object
+            propertise:
+                id:
+                    type: string
+                    required: true
+                lemma:
+                    type: string
+                    required: true
+                release:
+                    type: string
+                    enum: ["PUBLIC","ATTR","SHAREALIKE","NONCOMMERCIAL","RESEARCH","PRIVATE"]
+                language:
+                    type: string
+                    pattern: "\\w{2,3}"
+                partOfSpeech:
+                    type: string
+                    enum: ["ADJ", "ADP", "ADV", "AUX", "CCONJ", "DET", "INTJ", "NOUN", "NUM", "PART", "PRON", "PROPN", "PUNCT", "SCONJ", "SYM", "VERB", "X"]
+        sense:
+            type: object
+            properties:
+                id:
+                    type: string
+                definition:
+                    type: string
+                subsenses:
+                    type: array
+                    items:
+                        $ref: '#/components/schema/sense'
+        relation:
+            type: object
+            properties:
+                id:
+                    type: string
+                rel_type:
+                    type: string
+                    enum: ["same","broader","narrower","similar","other"]
+                other_rel_type:
+                    type: string
+                target:
+                    type: object
+                    properties:
+                        id:
+                            type: string
+                        resource:
+                            type: string
