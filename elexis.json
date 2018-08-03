@@ -2,7 +2,15 @@
     "info": {
         "version": "Draft",
         "title": "ELEXIS Protocol for accessing dictionaries",
-        "description": "This protocol allows data to be shared with the ELEXIS platform and should be implemented by all providers of data to the ELEXIS platform"
+        "description": "This protocol allows data to be shared with the ELEXIS platform and should be implemented by all providers of data to the ELEXIS platform",
+        "contact": {
+            "name": "ELEXIS Project",
+            "url": "https://elex.is/"
+        },
+        "license": {
+            "name": "Public Domain",
+            "url": "https://creativecommons.org/publicdomain/zero/1.0/"
+        }
     }, 
     "paths": {
         "/dictionaries": {
@@ -268,7 +276,7 @@
                  "operationId": "getByLemma"
             }
         }, 
-        "/entry/{dictionary}/{id}": {
+        "/json/{dictionary}/{id}": {
             "get": {
                 "summary": "Entry as JSON",
                 "description": "Return the Entry directly as a JSON document. Services must implement at least one of the `/entry`, `/rdf` or `/ttl` actions.",
@@ -322,15 +330,15 @@
                 "operationId": "getEntryById"
             }
         }, 
-        "/ttl/{dictionary}/{id}": {
+        "/ontolex/{dictionary}/{id}": {
             "get": {
                 "summary": "Entry as Turtle",
-                "description": "Return the dictionary entry as an RDF Turtle Document. Services must implement at least one of the `/entry`, `/rdf` or `/ttl` actions.",
+                "description": "Return the dictionary entry as an RDF Turtle Document. Services must implement at least one of the `/json`, `/tei` or `/ontolex` actions.",
                 "responses": {
                     "200": {
                         "content": {
                             "text/turtle": {
-                                "example": "@prefix ontolex: @prefix ontolex: <http://www.w3.org/ns/lemon/ontolex#> .\n@prefix lexinfo: <http://lexinfo.net/ontology/3.0/lexinfo/>.\n@prefix skos: <http://www.w3.org/2004/02/skos/core# >\n\n<> a ontolex:LexicalEntry\n  ontolex:canonicalForm [\n  ontolex:writtenRep \"example\"@en ] ;\n  lexinfo:partOfSpeech lexinfo:noun ;\n  ontolex:denotes [\n    skos:definition \"An example OntoLex Entry\"@en ] ."
+                                "example": "@prefix ontolex: @prefix ontolex: <http://www.w3.org/ns/lemon/ontolex#> .\n@prefix lexinfo: <http://lexinfo.net/ontology/3.0/lexinfo/>.\n@prefix skos: <http://www.w3.org/2004/02/skos/core# >\n\n<> a ontolex:LexicalEntry\n  ontolex:canonicalForm [\n  ontolex:writtenRep \"example\"@en ] ;\n  lexinfo:partOfSpeech lexinfo:commonNoun ;\n  ontolex:denotes [\n    skos:definition \"An example OntoLex Entry\"@en ] ."
                             }
                         }, 
                         "description": "Success",
@@ -374,7 +382,7 @@
                 "operationId": "getEntryById"
             }
         },
-        "/xml/{dictionary}/{id}": {
+        "/tei/{dictionary}/{id}": {
             "get": {
                 "summary": "Entry XML",
                 "description": "Return the TEI-Lex0 representation of the document. Services must implement at least one of the `/entry`, `/rdf` or `/ttl` actions.",
@@ -382,7 +390,7 @@
                     "200": {
                         "content": {
                             "text/xml": {
-                                    "example": "<entry xml:id=\"id\">\n  <form type=\"lemma\"><orth>example</orth></form>\n  <gramGrp>\n  <pos norm=\"NN\">noun</pos>\n  </gramGrp>\n  <sense n=\"1\">\n    <def>An example TEI-Lex0 Entry</def>\n  </sense>\n</entry>",
+                                    "example": "<entry xml:id=\"id\">\n  <form type=\"lemma\"><orth>example</orth></form>\n  <gramGrp>\n    <pos norm=\"NN\">noun</pos>\n  </gramGrp>\n  <sense n=\"1\">\n    <def>An example TEI-Lex0 Entry</def>\n  </sense>\n</entry>",
                                 "schema": {
                                     "description": "A TEI-Lex0 document, see description TBD",
                                     "example": "<entry xml:id=\"foo\"></entry>"
@@ -494,14 +502,14 @@
                     },
                     "formats": {
                         "type": "array",
-                        "description": "The formats that this resource is available in. They are as follows\n - *TEI-LEX*: This document is available as TEI-Lex0 from the `/xml` path\n - *ONTOLEX-JSON*: This document is available as OntoLex-Lemon in JSON-LD markup from the `/entry` path\n - *ONTOLEX-TTL*: The document is available as OntoLex-Lemon in Turtle from the `/ttl` path",
+                        "description": "The formats that this resource is available in. They are as follows\n - `tei`: This document is available as TEI-Lex0 from the `/tei` path\n - `json`: This document is available as OntoLex-Lemon in JSON-LD markup from the `/json` path\n - `ontolex`: The document is available as OntoLex-Lemon in Turtle from the `/ontolex` path",
                         "minItems": 1,
                         "uniqueItems": true,
                         "items": {
                             "enum": [
-                                "TEI-LEX",
-                                "ONTOLEX-JSON",
-                                "ONTOLEX-TTL"
+                                "tei",
+                                "json",
+                                "ontolex"
                             ],
                             "type": "string"
                         }
@@ -509,8 +517,60 @@
                 }, 
                 "type": "object"
             }, 
+            "agent": {
+                "type": "object",
+                "description": "Examples of Agent include person, organization, and software agent.",
+                "properties": {
+                    "name": {
+                        "description": "The name of the agent",
+                        "type": "string",
+                        "example": "Joe Bloggs"
+                    },
+                    "email": {
+                        "description": "The email address of an agent",
+                        "type": "string",
+                        "pattern": ".*@.*",
+                        "example": "joe.bloggs@example.com"
+                    }
+                }
+            },
+            "agent-class": {
+                "type": "object",
+                "description": "Examples of Agent Class include groups seen as classes, such as students, women, charities, lecturers.",
+                "properties": {
+                    "name": {
+                        "description": "The name of the agent class",
+                        "type": "string",
+                        "example": "Students"
+                    }
+                }
+            },
             "metadata": {
                 "type": "object", 
+                "example": {
+                    "release": "PUBLIC",
+                    "sourceLanguage": "en",
+                    "targetLanguage": [
+                        "en",
+                        "de"
+                    ],
+                    "genre": [
+                        "gen"
+                    ],
+                    "license": "https://creativecommons.org/licenses/by/4.0/",
+                    "title": "The Human-Readable Name of This Resource",
+                    "creator": [
+                        {
+                            "name": "Institute of This Resource",
+                            "email": "contact@institute.com"
+                        }
+                    ],
+                    "publisher": [
+                        {
+                            "name": "Publishing Company"
+                        }
+                    ]
+                },
                 "properties": {
                     "release": {
                         "description": "The conditions under which this entry can be included in the ELEXIS Matrix Dictionary",
@@ -523,8 +583,16 @@
                         "required": true,
                         "type": "string"
                     }, 
-                    "languages": {
-                        "type": "object",
+                    "sourceLanguage": {
+                        "type": "string",
+                        "description": "The language of the headwords in the dictionary, as an ISO 639-1,2,3 code. If a (two-letter) ISO 639-1 code exists this should be used in preference",
+                        "pattern": "\\w{2,3}", 
+                        "example": "en",
+                        "required": true
+                    },
+                    "targetLanguage": {
+                        "type": "array",
+                        "description": "The languages of the entries in the dictionary, can be identical to the source language or another language (for example in a bilingual dictionary).",
                         "minItems": 1,
                         "uniqueItems": true,
                         "items": {
@@ -535,6 +603,25 @@
                             "example": "en"
                         },
                         "example": ["en", "de"]
+                    },
+                    "genre": {
+                        "type": "array",
+                        "required": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "gen", 
+                                "lrn", 
+                                "ety", 
+                                "spe", 
+                                "his", 
+                                "ort", 
+                                "trm"
+                            ]
+                        },
+                        "description": "The genre of the dictionary.\n\n`gen` **General dictionaries** are dictionaries that document contemporary vocabulary and are intended for everyday reference by native and fluent speakers. \n\n `lrn` **Learners' dictionaries** are intended for people who are learning the language as a second language. \n\n`ety` **Etymological dictionaries** are dictionaries that explain the origins of words. \n\n`spe` **Dictionaries on special topics** are dictionaries that focus on a specific subset of the vocabulary (such as new words or phrasal verbs) or which focus on a specific dialect or variant of the language. \n\n`his` **Historical dictionaries** are dictionaries that document previous historical states of the language. \n\n`ort` **Spelling dictionaries** are dictionaries which codify the correct spelling and other aspects of the orthography of words. \n\n `trm` **Terminological dictionaries** describe the vocabulary of specialized domains such as biology, mathematics or economics. \n\n",
+                        "example": ["gen"]
+
                     },
                     "license": {
                         "description": "The license that can be used to republish this data",
@@ -551,16 +638,271 @@
                     "creator": {
                         "description": "The creator of the resource",
                         "required": "true",
-                        "type": "string",
-                        "example": "Institute of This Resource"
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/agent"
+                        },
+                        "example": [{
+                            "name": "Institute of This Resource",
+                            "email": "contact@institute.com"
+                        }]
                     },
                     "publisher": {
                         "description": "The publisher of This Resource",
                         "required": "true",
-                        "type": "string",
-                        "example": "Publishing Company"
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/agent"
+                        },
+                        "example": [{
+                            "name": "Publishing Company"
+                        }]
+                    },
+	            "abstract": {
+                        "description": "A summary of the resource.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    "accrualMethod": {
+                        "description": "The method by which items are added to a collection.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    "accrualPeriodicity": {
+                        "description": "The frequency with which items are added to a collection.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    "accrualPolicy": {
+                        "description": "The policy governing the addition of items to a collection.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    "alternative": {
+                        "description": "An alternative name for the resource.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    "audience": {
+                        "description": "A class of entity for whom the resource is intended or useful.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    "available": {
+                        "description": "Date that the resource became or will become available.",
+                        "required": false,
+                        "type": "date"
+                    },
+                    "bibliographicCitation": {
+                        "description": "A bibliographic reference for the resource.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    "conformsTo": {
+                        "description": "An established standard to which the described resource conforms.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    "contributor": {
+                        "description": "An entity responsible for making contributions to the resource.",
+                        "required": false,
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/agent"
+                        }
+                    },
+                    "coverage": {
+                        "description": "The spatial or temporal topic of the resource, the spatial applicability of the resource, or the jurisdiction under which the resource is relevant.",
+                        "required": false,
+                        "type": "string"                    
+                    },
+                    "created": {
+                        "description": "Date of creation of the resource.",
+                        "required": false,
+                        "type": "date"
+                    },
+                    "date": {
+                        "description": "A point or period of time associated with an event in the lifecycle of the resource.",
+                        "required": false,
+                        "type": "date-time"
+                    },
+                    "dateAccepted": {
+                        "description": "Date of acceptance of the resource.",
+                        "required": false,
+                        "type": "date"
+                    },
+                    "dateCopyrighted": {
+                        "description": "Date of copyright.",
+                        "required": false,
+                        "type": "date"
+                    },
+                    "dateSubmitted": {
+                        "description": "Date of submission of the resource.",
+                        "required": false,
+                        "type": "date"
+                    },
+                    "description": {
+                        "description": "An account of the resource.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    "educationLevel": {
+                        "description": "A class of entity, defined in terms of progression through an educational or training context, for which the described resource is intended.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    "extent": {
+                        "description": "The size or duration of the resource.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    "hasFormat": {
+                        "description": "A related resource that is substantially the same as the pre-existing described resource, but in another format.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    "hasPart": {
+                        "description": "A related resource that is included either physically or logically in the described resource.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    "hasVersion": {
+                        "description": "A related resource that is a version, edition, or adaptation of the described resource.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    "identifier": {
+                        "description": "An unambiguous reference to the resource within a given context.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    "instructionalMethod": {
+                        "description": "A process, used to engender knowledge, attitudes and skills, that the described resource is designed to support.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    "isFormatOf": {
+                        "description": "A related resource that is substantially the same as the described resource, but in another format.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    "isPartOf": {
+                        "description": "A related resource in which the described resource is physically or logically included.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    "isReferencedBy": {
+                        "description": "A related resource that references, cites, or otherwise points to the described resource.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    "isReplacedBy": {
+                        "description": "A related resource that supplants, displaces, or supersedes the described resource.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    "isRequiredBy": {
+                        "description": "A related resource that requires the described resource to support its function, delivery, or coherence.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    "issued": {
+                        "description": "Date of formal issuance (e.g., publication) of the resource.",
+                        "required": false,
+                        "type": "date"
+                    },
+                    "isVersionOf": {
+                        "description": "A related resource of which the described resource is a version, edition, or adaptation.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    "mediator": {
+                        "description": "An entity that mediates access to the resource and for whom the resource is intended or useful.",
+                        "required": false,
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/agent-class"
+                        }
+                    },
+                    "modified": {
+                        "description": "Date on which the resource was changed.",
+                        "required": false,
+                        "type": "date"
+                    },
+                    "provenance": {
+                        "description": "A statement of any changes in ownership and custody of the resource since its creation that are significant for its authenticity, integrity, and interpretation.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    "references": {
+                        "description": "A related resource that is referenced, cited, or otherwise pointed to by the described resource.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    "relation": {
+                        "description": "A related resource.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    "replaces": {
+                        "description": "A related resource that is supplanted, displaced, or superseded by the described resource.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    "requires": {
+                        "description": "A related resource that is required by the described resource to support its function, delivery, or coherence.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    "rights": {
+                        "description": "Information about rights held in and over the resource.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    "rightsHolder": {
+                        "description": "A person or organization owning or managing rights over the resource.",
+                        "required": false,
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/agent"
+                        }
+                    },
+                    "source": {
+                        "description": "A related resource from which the described resource is derived.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    "spatial": {
+                        "description": "Spatial characteristics of the resource.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    "subject": {
+                        "description": "The topic of the resource.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    "tableOfContents": {
+                        "description": "A list of subunits of the resource.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    "temporal": {
+                        "description": "Temporal characteristics of the resource.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    "type": {
+                        "description": "The nature or genre of the resource.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    "valid": {
+                        "description": "Date of validity of a resource.",
+                        "required": false,
+                        "type": "date"
                     }
-                }
+               }
             }
         },
         "ontolex": {
@@ -595,6 +937,28 @@
                             }
                         }
                     },
+                    "partOfSpeech": {
+                        "type": "string",
+                        "description": "The part of speech of the entry",
+                        "enum": [
+                            "lexinfo:adjective",
+                            "lexinfo:adposition",
+                            "lexinfo:adverb",
+                            "lexinfo:auxiliary",
+                            "lexinfo:coordinatingConjunction",
+                            "lexinfo:determiner",
+                            "lexinfo:interjection",
+                            "lexinfo:commonNoun",
+                            "lexinfo:numeral",
+                            "lexinfo:particle",
+                            "lexinfo:properNoun",
+                            "lexinfo:punctuation",
+                            "lexinfo:subordinatingConjunction",
+                            "lexinfo:symbol",
+                            "lexinfo:verb",
+                            "other"
+                        ]
+                    },
                     "otherForm": {
                         "type": "array",
                         "description": "The other form property relates a lexical entry to a non-preferred (\"non-lemma\") form that realizes the given lexical entry.",
@@ -607,11 +971,11 @@
                         "description": "The morphological pattern property indicates the morphological class of a word.",
                         "example": "first-declension"
                     },
-                    "denotes": {
+                    "evokes": {
                         "type": "array",
-                        "description": "The denotes property relates a lexical entry to a predicate in a given ontology that represents its meaning and has some denotational or model-theoretic semantics.",
+                        "description": "The evokes property relates a lexical entry to one of the lexical concepts it evokes, i.e. the mental concept that speakers of a language might associate when hearing the lexical entry.",
                         "items": {
-                            "$ref": "#/components/ontolex/Reference"
+                            "$ref": "#/components/ontolex/LexicalConcept"
                         }
                     },
                     "sense": {
@@ -631,11 +995,11 @@
                     "@context": "http://lexinfo.net/jsonld/3.0/content.json",
                     "@type": "Word",
                     "language": "en",
-                    "partOfSpeech": "noun",
+                    "partOfSpeech": "lexinfo:commonNoun",
                     "canonicalForm": {
                         "writtenRep": "example"
                     },
-                    "denotes": {
+                    "evokes": {
                         "definition": "An example OntoLex Entry"
                     }
                 }
@@ -653,7 +1017,7 @@
                     }
                 }
             },
-            "Reference": {
+            "LexicalConcept": {
                 "type": "object",
                 "properties": {
                     "definition": {
@@ -671,8 +1035,7 @@
                         "example": "http://dbpedia.org/resource/Example"
                     }
                 }
-            },
-
+            }
         },
         "server_error": {
             "description": "Internal Server Error",
