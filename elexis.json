@@ -531,6 +531,12 @@
                         "type": "string",
                         "pattern": ".*@.*",
                         "example": "joe.bloggs@example.com"
+                    },
+                    "url": {
+                        "description": "The URL pointing to contact information",
+                        "type": "string",
+                        "pattern": "https?://.*",
+                        "example": "http://elex.is"
                     }
                 }
             },
