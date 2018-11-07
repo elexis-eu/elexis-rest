@@ -439,15 +439,19 @@
                         "description": "The conditions under which this entry can be included in the ELEXIS Matrix Dictionary",
                         "enum": [
                             "PUBLIC", 
-                            "ATTR", 
-                            "SHAREALIKE", 
                             "NONCOMMERCIAL", 
                             "RESEARCH", 
                             "PRIVATE"
                         ], 
-                        "required": "true",
+                        "required": true,
                         "type": "string"
                     }, 
+                    "page": {
+                            "description": "The webpage giving a page where users can see the complete entry as HTML",
+                            "pattern": "https?://.*",
+                            "type": "string",
+                            "example": "https://en.wiktionary.org/wiki/word"
+                    },
                     "lemma": {
                         "description": "The lemma (headword) of this identifier",
                         "required": true, 
