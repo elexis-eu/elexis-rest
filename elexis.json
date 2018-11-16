@@ -279,7 +279,7 @@
         "/json/{dictionary}/{id}": {
             "get": {
                 "summary": "Entry as JSON",
-                "description": "Return the Entry directly as a JSON document. Services must implement at least one of the `/entry`, `/rdf` or `/ttl` actions.",
+                "description": "Return the Entry directly as a JSON document. Services must implement at least one of the `/json`, `/ontolex` or `/tei` actions.",
                 "responses": {
                     "200": {
                         "content": {
@@ -385,7 +385,7 @@
         "/tei/{dictionary}/{id}": {
             "get": {
                 "summary": "Entry XML",
-                "description": "Return the TEI-Lex0 representation of the document. Services must implement at least one of the `/entry`, `/rdf` or `/ttl` actions.",
+                "description": "Return the TEI-Lex0 representation of the document. Services must implement at least one of the `/ontolex`, `/json` or `/tei` actions.",
                 "responses": {
                     "200": {
                         "content": {
