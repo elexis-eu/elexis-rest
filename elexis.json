@@ -57,7 +57,7 @@
                         "required": true,
                         "in": "path",
                         "name": "dictionary",
-                        "description": "The dictionary to describe",
+                        "description": "Identifier of the dictionary to describe",
                         "schema": {
                             "type": "string"
                         }
@@ -93,7 +93,7 @@
                         "required": true,
                         "in": "path",
                         "name": "dictionary",
-                        "description": "The dictionary to list",
+                        "description": "The identifier of the dictionary to list",
                         "schema": {
                             "type": "string"
                         }
@@ -153,7 +153,7 @@
                         "required": true,
                         "in": "path",
                         "name": "dictionary",
-                        "description": "The dictionary containing the entries",
+                        "description": "The identifier of the dictionary containing the entries",
                         "schema": {
                             "type": "string"
                         }
@@ -313,7 +313,7 @@
                         "required": true,
                         "in": "path",
                         "name": "dictionary",
-                        "description": "The dictionary containing the entry",
+                        "description": "The identifier of the dictionary containing the entry",
                         "schema": {
                             "type": "string"
                         }
@@ -322,6 +322,7 @@
                         "required": true, 
                         "in": "path", 
                         "name": "id", 
+                        "description": "The identifier of the entry",
                         "schema": {
                             "type": "string"
                         }
@@ -466,7 +467,7 @@
                         "example": "en"
                     }, 
                     "id": {
-                        "description": "A uniquer identifier for the entry",
+                        "description": "A unique identifier for the entry",
                         "required": true, 
                         "type": "string"
                     }, 
@@ -1003,9 +1004,9 @@
                     "canonicalForm": {
                         "writtenRep": "example"
                     },
-                    "evokes": {
+                    "evokes": [{
                         "definition": "An example OntoLex Entry"
-                    }
+                    }]
                 }
 
             },
