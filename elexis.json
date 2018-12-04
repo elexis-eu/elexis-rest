@@ -51,7 +51,7 @@
         "/about/{dictionary}": {
             "get": {
                 "summary": "About the dictionary",
-                "description": "The default conditions under which this entry can be included in the ELEXIS Matrix Dictionary. May be superseded by entry or element-level constraints",
+                "description": "Get the metadata about the dictionary, including the conditions under which it can be included in the Dictionary Matrix",
                 "parameters": [
                     {
                         "required": true,
@@ -447,8 +447,6 @@
                         "description": "The conditions under which this entry can be included in the ELEXIS Matrix Dictionary",
                         "enum": [
                             "PUBLIC", 
-                            "ATTR", 
-                            "SHAREALIKE", 
                             "NONCOMMERCIAL", 
                             "RESEARCH", 
                             "PRIVATE"
@@ -564,7 +562,7 @@
                         "gen"
                     ],
                     "license": "https://creativecommons.org/licenses/by/4.0/",
-                    "title": "The Human-Readable Name of This Resource",
+                    "title": "The Human-Readable Name of this resource",
                     "creator": [
                         {
                             "name": "Institute of This Resource",
