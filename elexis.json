@@ -976,12 +976,10 @@
                         "description": "The morphological pattern property indicates the morphological class of a word.",
                         "example": "first-declension"
                     },
-                    "evokes": {
-                        "type": "array",
-                        "description": "The evokes property relates a lexical entry to one of the lexical concepts it evokes, i.e. the mental concept that speakers of a language might associate when hearing the lexical entry.",
-                        "items": {
-                            "$ref": "#/components/ontolex/LexicalConcept"
-                        }
+                    "etymology": {
+                        "type": "string",
+                        "description": "The etymology of the entry",
+                        "example": "From Old English catt"
                     },
                     "sense": {
                         "type": "array",
@@ -1022,18 +1020,13 @@
                     }
                 }
             },
-            "LexicalConcept": {
+            "LexicalSense": {
                 "type": "object",
                 "properties": {
                     "definition": {
                         "description": "The plain text definition of this concept",
                         "example": "This is a concept in an ontology"
-                    }
-                }
-            },
-            "LexicalSense": {
-                "type": "object",
-                "properties": {
+                    },
                     "reference": {
                         "required": true,
                         "description": "The reference property relates a lexical sense to an ontological predicate that represents the denotation of the corresponding lexical entry.",
