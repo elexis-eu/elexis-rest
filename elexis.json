@@ -981,7 +981,7 @@
                         "description": "The etymology of the entry",
                         "example": "From Old English catt"
                     },
-                    "sense": {
+                    "senses": {
                         "type": "array",
                         "description": "The sense property relates a lexical entry to one of its lexical senses.",
                         "items": {
@@ -1002,7 +1002,7 @@
                     "canonicalForm": {
                         "writtenRep": "example"
                     },
-                    "evokes": [{
+                    "senses": [{
                         "definition": "An example OntoLex Entry"
                     }]
                 }
