@@ -28,7 +28,7 @@
                                     "properties": {
                                         "dictionaries": {
                                             "type": "array",
-                                            "description": "An array of identifiers for resources",
+                                            "description": "An array of identifiers for dictionaries",
                                             "minItems": 1,
                                             "uniqueItems": true,
                                             "items": {
@@ -86,7 +86,7 @@
         },
         "/list/{dictionary}": {
             "get": {
-                "summary": "Get all headwords",
+                "summary": "Get all lemmas",
                 "description": "Get all of the entries contained within this dictionary",
                 "parameters": [
                     {
@@ -132,7 +132,7 @@
                                 }
                             }
                         }, 
-                        "description": "The entries matching with this lemma as headwords"
+                        "description": "The entries matching with this lemma"
                     },
                     "404": {
                         "description": "Dictionary not found (identifier not known)"
@@ -245,7 +245,7 @@
                         "required": false, 
                         "in": "query",
                         "name": "inflected", 
-                        "description": "If true treat the headword as an inflected form and return all lemmas that may be a form of this headword",
+                        "description": "If true treat the query as an inflected form and return all lemmas that may be a form of this query",
                         "schema": {
                             "default": false, 
                             "type": "boolean"
@@ -264,7 +264,7 @@
                                 }
                             }
                         }, 
-                        "description": "The entries matching with this lemma as headwords"
+                        "description": "The entries matching with this query"
                     },
                     "404": {
                         "description": "Dictionary not found (identifier not known)"
@@ -456,7 +456,7 @@
                         "type": "string"
                     }, 
                     "lemma": {
-                        "description": "The lemma (headword) of this identifier",
+                        "description": "The lemma of this identifier",
                         "required": true, 
                         "type": "string"
                     }, 
@@ -578,7 +578,7 @@
                 },
                 "properties": {
                     "release": {
-                        "description": "The conditions under which this entry can be included in the ELEXIS Matrix Dictionary",
+                        "description": "The conditions under which this dictionary (or data from this dictionary) can be included in the ELEXIS Matrix Dictionary",
                         "enum": [
                             "PUBLIC", 
                             "NONCOMMERCIAL", 
@@ -590,7 +590,7 @@
                     }, 
                     "sourceLanguage": {
                         "type": "string",
-                        "description": "The language of the headwords in the dictionary, as an ISO 639-1,2,3 code. If a (two-letter) ISO 639-1 code exists this should be used in preference",
+                        "description": "The language of the lemmas in the dictionary, as an ISO 639-1,2,3 code. If a (two-letter) ISO 639-1 code exists this should be used in preference",
                         "pattern": "\\w{2,3}", 
                         "example": "en",
                         "required": true
