@@ -1,0 +1,20 @@
+{
+    "@context": {
+        "ontolex": "http://www.w3.org/ns/lemon/ontolex#",
+        "lexinfo": "http://www.lexinfo.net/ontology/2.0/lexinfo#",
+        "LexicalEntry": "ontolex:LexicalEntry",
+        "Word": "ontolex:Word",
+        "MultiWordExpression": "ontolex:MultiWordExpression",
+        "Affix": "ontolex:Affix",
+        "canonicalForm": { "@id": "ontolex:canonicalForm", "@type": "@id" },
+        "writtenRep": { "@id": "ontolex:writtenRep" },
+        "phoneticRep": { "@id": "ontolex:phoneticRep" },
+        "partOfSpeech": { "@id": "lexinfo:partOfSpeech", "@type": "@id" },
+        "otherForm": { "@id": "ontolex:otherForm", "@type": "@id" },
+        "morphologicalPattern": { "@id": "ontolex:morphologicalPattern", "@type": "@id" },
+        "senses": { "@id": "ontolex:sense", "@type": "@id" },
+        "usage": { "@id": "ontolex:usage", "@type": "@id" },
+        "definition": { "@id": "http://www.w3.org/2004/02/skos/core#definition" },
+        "reference": { "@id": "ontolex:reference", "@type": "@id" }
+    }
+}
