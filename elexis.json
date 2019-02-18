@@ -427,9 +427,15 @@
                             "RESEARCH", 
                             "PRIVATE"
                         ], 
-                        "required": "true",
+                        "required": true,
                         "type": "string"
                     }, 
+                    "page": {
+                            "description": "The webpage giving a page where users can see the complete entry as HTML",
+                            "pattern": "https?://.*",
+                            "type": "string",
+                            "example": "https://en.wiktionary.org/wiki/word"
+                    },
                     "lemma": {
                         "description": "The lemma of this identifier",
                         "required": true, 
