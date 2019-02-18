@@ -170,31 +170,6 @@
                     {
                         "required": false, 
                         "in": "query", 
-                        "name": "language", 
-                        "description": "A language code following the ISO 639-1,2,3 standard. If a (two-letter) ISO 639-1 code exists this should be used in preference",
-                        "example": "en",
-                        "examples": [{
-                            "english": {
-                                "summary": "English",
-                                "value": "en"
-                            }, 
-                            "german": {
-                                "summary": "German",
-                                "value": "de"
-                            }, 
-                            "old_english": {
-                                "summary": "Old English",
-                                "value": "ang"
-                            }
-                        }],
-                        "schema": {
-                            "pattern": "\\w{2,3}", 
-                            "type": "string"
-                        }
-                    }, 
-                    {
-                        "required": false, 
-                        "in": "query", 
                         "name": "partOfSpeech", 
                         "description": "A part of speech tag that the entry has, this must be one of the value from the Universal Part-of-Speech Tagset (http://universaldependencies.org/u/pos/)",
                         "schema": {
@@ -989,7 +964,7 @@
                         }
                     },
                     "usage": {
-                        "type": "object",
+                        "type": "string",
                         "description": "The usage property indicates usage conditions or pragmatic implications when using the lexical entry to refer to the given ontological meaning.",
                         "example": { "value": "This is a usage example" }
                     }
@@ -1024,11 +999,12 @@
                 "type": "object",
                 "properties": {
                     "definition": {
+                        "type": "string",
                         "description": "The plain text definition of this concept",
                         "example": "This is a concept in an ontology"
                     },
                     "reference": {
-                        "required": true,
+                        "type": "string",
                         "description": "The reference property relates a lexical sense to an ontological predicate that represents the denotation of the corresponding lexical entry.",
                         "example": "http://dbpedia.org/resource/Example"
                     }
