@@ -973,7 +973,7 @@
                     "@context": "http://lexinfo.net/jsonld/3.0/content.json",
                     "@type": "Word",
                     "language": "en",
-                    "partOfSpeech": "lexinfo:commonNoun",
+                    "partOfSpeech": "commonNoun",
                     "canonicalForm": {
                         "writtenRep": "example"
                     },
