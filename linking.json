@@ -1,0 +1,347 @@
+{
+    "info": {
+        "version": "1.0",
+        "title": "ELEXIS Protocol for Dictionary Linking",
+        "description": "This protocol is used by the ELEXIS Dictonary Matrix to provide linking between two dictionaries, it is implemented by services such as the Naisc system and the BabelNet linker. This protocol depends on the REST API for accessing dictionaries: https://elexis-eu.github.io/elexis-rest/",
+        "contact": {
+            "name": "ELEXIS project",
+            "url": "https://elex.is/"
+        },
+        "license": {
+            "name" : "Public Domain",
+            "url": "https://creativecommons.org/publicdomain/zero/1.0/"
+        }
+    }, 
+    "paths": {
+        "/link": {
+            "post": {
+                "summary": "Link two dictionaries",
+                "description": "Link the senses of two dictionaries from two endpoints implemented the ELEXIS dictionary access protocol. This protocol requires the connection to be maintained until the linking is complete so is suitable for small tasks, e.g., single entry linking.",
+                "requestBody": {
+                    "description": "Linking task description",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/task"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/linking"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "$ref": "#/components/server_error"
+                    },
+                    "501": {
+                        "$ref": "#/components/not_supported"
+                    }
+                }
+            }
+        },
+        "/submit/{id}": {
+            "post": {
+                "summary": "Submit a linking task",
+                "description": "Link the sense of two dictionaries from two endpoints implemented the ELEXIS dictionary access protocol. This protocol returns on a success status, so that the result must be obtained with the /result query, and as such it is suitable for longer tasks, e.g., linking complete dictionaries",
+                "parameters": [{
+                    "in": "path",
+                    "name": "id",
+                    "schema": { 
+                        "type": "string"
+                    },
+                    "description": "An identifier for the task"
+                }],
+                "requestBody": {
+                    "description": "Linking task description",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/task"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "403": {
+                        "description": "It was not possible to start a task with this ID, for example it is already in use"
+                    },
+                    "500": {
+                        "$ref": "#/components/server_error"
+                    },
+                    "501": {
+                        "$ref": "#/components/not_supported"
+                    }
+                }
+            }
+        },
+        "/status/{id}" : {
+            "get": {
+                "summary": "Get the status of a linking task",
+                "description": "Returns the status of a task submitted with /submit, including whether it has failed or completed",
+                "parameters": [{
+                    "in": "path",
+                    "name": "id",
+                    "schema": { 
+                        "type": "string"
+                    },
+                    "description": "An identifier for the task"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/status"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "The task ID was not found, for example, because it was not submitted"
+                    }
+                }
+            }
+        },
+        "/result/{id}": {
+            "get": {
+                "summary": "Get the result of a linking",
+                "description": "Get the linking between two dictonaries. This should be called only after a submit and once the status has reached 'completed'",
+                "parameters": [{
+                    "in": "query",
+                    "name": "id",
+                    "schema": { 
+                        "type": "string"
+                    },
+                    "description": "An identifier for the task"
+                },{
+                    "in": "query",
+                    "name": "retain",
+                    "schema": {
+                        "type": "boolean"
+                    },
+                    "description": "Whether the server should retain this result or can delete all information related to this run"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/linking"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "The task ID was not found, for example, because it was not submitted or the result is not available yet"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "task": { 
+            "properties": {
+                "source": {
+                    "description": "The source dictionary",
+                    "properties": {
+
+                        "endpoint": {
+                            "description": "The endpoint (an implementation of the ELEXIS REST protocol), where the source dictionary is available",
+                            "type": "string",
+                            "format": "uri"
+                        },
+                        "id" : {
+                            "description": "The identifier of the source dictionary to be linked, as it is specified by the source endpoint",
+                            "type": "string"
+                        },
+                        "entries": {
+                            "description": "The list of source entries to link by their ID in the endpoint. If empty all entries are linked",
+                            "type": "array",
+                            "minItems": 1,
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string"
+                            }
+
+                        }
+                    },
+                    "required": ["endpoint","id"]
+                },
+                "target": {
+                    "description": "The target dictionary",
+                    "properties": {
+                        "endpoint": {
+                            "description": "The endpoint (an implementation of the ELEXIS REST protocol), where the target dictionary is available",
+                            "type": "string",
+                            "format": "uri"
+                        },
+                        "id" : {
+                            "description": "The identifier of the source dictionary to be linked, as it is specified by the source endpoint",
+                            "type": "string"
+                        },
+                        "entries": {
+                            "description": "The list of target entries to link by their ID in the endpoint. If empty all entries are linked",
+                            "type": "array",
+                            "minItems": 1,
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "required": ["endpoint","id"]
+                },
+                "configuration": {
+                    "description": "An implementation specific configuration object",
+                    "type": "object"
+                }
+            },
+            "required": ["source","target"],
+            "example": {
+                "source": {
+                    "endpoint": "http://elex.is/lexonomy/",
+                    "id": "my_dictionary",
+                    "entries": [ "cat-n", "dog-n", "work-v" ]
+                },
+                "target": {
+                    "endpoint": "http://babelnet.org/elexis/",
+                    "id": "babelnet"
+                },
+                "configuration": {
+                    "some": "application specific values"
+                }
+            }
+        },
+        "linking": {
+            "type": "array",
+            "items": {
+                "properties": {
+                    "source_entry": {
+                        "description": "The ID of the source entry",
+                        "type": "string"
+                    },
+                    "target_entry": {
+                        "description": "The ID of the target entry",
+                        "type": "string"
+                    },
+                    "linking": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "source_sense": {
+                                    "description": "The ID of the source sense",
+                                    "type": "string"
+                                },
+                                "target_sense": {
+                                    "description": "The ID of the target sense",
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "description": "The kind of link",
+                                    "enum": [
+                                        "exact",
+                                        "broader",
+                                        "narrower",
+                                        "related"
+                                    ]
+                                },
+                                "score": {
+                                    "description": "The score of the linking",
+                                    "type": "number",
+                                    "minimum": 0,
+                                    "maximum": 1
+                                }
+                            },
+                            "required": ["source_sense","target_sense","type"]
+                        }
+                    }
+                },
+                "required": ["source_entry","target_entry","linking"],
+                "example": [{
+                    "source_entry": "cat-n",
+                    "target_entry": "cat-EN",
+                    "linking": [{
+                        "source_sense": "sense1",
+                        "target_sense": "00016606n", 
+                        "type": "exact",
+                        "score": 0.8
+                    },{
+                        "source_sense": "sense2",
+                        "target_sense": "00001844n", 
+                        "type": "broader",
+                        "score": 0.2
+                    }]
+                },{
+                    "source_entry": "dog-n",
+                    "target_entry": "dog-EN",
+                    "linking": [{
+                        "source_sense": "sense1",
+                        "target_sense": "00015267n", 
+                        "type": "exact",
+                    }]
+                }]
+            }
+        },
+        "status": {
+            "properties": {
+                "state": {
+                    "description": "What state the task is in",
+                    "enum": [
+                        "PROCESSING",
+                        "COMPLETED",
+                        "FAILED"
+                    ]
+                },
+                "message": {
+                    "description": "Any informative messages to show the user about the processing",
+                    "type": "string"
+                }
+            },
+            "required": ["state"],
+            "example": {
+                "state": "PROCESSING",
+                "message": "Still working away"
+            }
+        },
+        "server_error": {
+            "description": "Internal Server Error",
+            "content": {
+                "text/plain": {
+                    "schema": {
+                        "type": "string",
+                        "description": "The error message as plain text",
+                        "example": "Something has gone terribly wrong..."
+                    }
+                }
+            }
+        },
+        "not_supported": {
+            "description": "The linking service does not support some part of the linking task specified.",
+            "content": {
+                "text/plain": {
+                    "schema": {
+                        "type": "string",
+                        "description": "The error message as plain text. This may occur because the linking service is limited in the endpoints it supports, the configuration is not appropriate or the server does not support one of the formats (XML/RDF/JSON) of the dictionary",
+                        "example": "Configuration not supported."
+                    }
+                }
+            }
+        }
+    },
+    "openapi": "3.0.0"
+}
+
+
