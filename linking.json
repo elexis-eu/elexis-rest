@@ -119,7 +119,7 @@
                 "summary": "Get the result of a linking",
                 "description": "Get the linking between two dictonaries. This should be called only after a submit and once the status has reached 'completed'",
                 "parameters": [{
-                    "in": "query",
+                    "in": "path",
                     "name": "id",
                     "schema": { 
                         "type": "string"
