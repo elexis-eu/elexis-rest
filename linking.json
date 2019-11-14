@@ -47,18 +47,11 @@
                 }
             }
         },
-        "/submit/{id}": {
+        "/submit": {
             "post": {
                 "summary": "Submit a linking task",
                 "description": "Link the sense of two dictionaries from two endpoints implemented the ELEXIS dictionary access protocol. This protocol returns on a success status, so that the result must be obtained with the /result query, and as such it is suitable for longer tasks, e.g., linking complete dictionaries",
-                "parameters": [{
-                    "in": "path",
-                    "name": "id",
-                    "schema": { 
-                        "type": "string"
-                    },
-                    "description": "An identifier for the task"
-                }],
+                "parameters": [],
                 "requestBody": {
                     "description": "Linking task description",
                     "content": {
@@ -71,7 +64,15 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Success"
+                        "description": "Success",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string",
+                                    "description": "A unique identifier for this task"
+                                }
+                            }
+                        }
                     },
                     "403": {
                         "description": "It was not possible to start a task with this ID, for example it is already in use"
@@ -85,18 +86,21 @@
                 }
             }
         },
-        "/status/{id}" : {
-            "get": {
+        "/status" : {
+            "post": {
                 "summary": "Get the status of a linking task",
                 "description": "Returns the status of a task submitted with /submit, including whether it has failed or completed",
-                "parameters": [{
-                    "in": "path",
-                    "name": "id",
-                    "schema": { 
-                        "type": "string"
-                    },
-                    "description": "An identifier for the task"
-                }],
+                "requestBody": {
+                    "content": {
+                        "text/plain": {
+                            "schema": {
+                                "type": "string",
+                                "description": "The ID as returned by submit"
+                            }
+                        }
+                    }
+                },
+                "parameters": [],
                 "responses": {
                     "200": {
                         "description": "Success",
@@ -114,18 +118,21 @@
                 }
             }
         },
-        "/result/{id}": {
-            "get": {
+        "/result": {
+            "post": {
                 "summary": "Get the result of a linking",
                 "description": "Get the linking between two dictonaries. This should be called only after a submit and once the status has reached 'completed'",
+                "requestBody": {
+                    "content": {
+                        "text/plain": {
+                            "schema": {
+                                "type": "string",
+                                "description": "The ID as returned by submit"
+                            }
+                        }
+                    }
+                },
                 "parameters": [{
-                    "in": "path",
-                    "name": "id",
-                    "schema": { 
-                        "type": "string"
-                    },
-                    "description": "An identifier for the task"
-                },{
                     "in": "query",
                     "name": "retain",
                     "schema": {
@@ -176,6 +183,10 @@
                                 "type": "string"
                             }
 
+                        },
+                        "apiKey": {
+                            "description": "A key to be used to access the dictionary, to be passed as an X-API-KEY header",
+                            "type": "string"
                         }
                     },
                     "required": ["endpoint","id"]

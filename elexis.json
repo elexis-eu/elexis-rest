@@ -17,7 +17,13 @@
             "get": {
                 "summary": "Get dictionaries",
                 "description": "List all of the dictionaries that are available at this endpoint",
-                "parameters": [],
+                "parameters": [{
+                    "required": false,
+                    "in": "header",
+                    "type": "string",
+                    "name": "X-API-KEY",
+                    "description": "An API key to authorize access to this endpoint if necessary"
+                }],
                 "responses": {
                     "200": {
                         "description": "Success",
@@ -41,6 +47,9 @@
                             }
                         }
                     },
+                    "403": {
+                        "$ref": "#/components/unauthorized"
+                    },
                     "500": { 
                         "$ref": "#/components/server_error"
                     }
@@ -61,6 +70,12 @@
                         "schema": {
                             "type": "string"
                         }
+                    }, {
+                        "required": false,
+                        "in": "header",
+                        "type": "string",
+                        "name": "X-API-KEY",
+                        "description": "An API key to authorize access to this endpoint if necessary"
                     }
                 ],
                 "responses": {
@@ -76,6 +91,9 @@
                     },
                     "404": {
                         "description": "Dictionary not found (identifier not known)"
+                    },
+                    "403": {
+                        "$ref": "#/components/unauthorized"
                     },
                     "500": {
                         "$ref": "#/components/server_error"
@@ -118,6 +136,12 @@
                             "minimum": 0, 
                             "type": "integer"
                         }
+                    }, {
+                        "required": false,
+                        "in": "header",
+                        "type": "string",
+                        "name": "X-API-KEY",
+                        "description": "An API key to authorize access to this endpoint if necessary"
                     }
                 ],
                 "responses": {
@@ -136,6 +160,9 @@
                     },
                     "404": {
                         "description": "Dictionary not found (identifier not known)"
+                    },
+                    "403": {
+                        "$ref": "#/components/unauthorized"
                     },
                     "500": {
                         "$ref": "#/components/server_error"
@@ -225,6 +252,12 @@
                             "default": false, 
                             "type": "boolean"
                         }
+                    }, {
+                        "required": false,
+                        "in": "header",
+                        "type": "string",
+                        "name": "X-API-KEY",
+                        "description": "An API key to authorize access to this endpoint if necessary"
                     }
                 ], 
                 "responses": {
@@ -240,6 +273,9 @@
                             }
                         }, 
                         "description": "The entries matching with this query"
+                    },
+                    "403": {
+                        "$ref": "#/components/unauthorized"
                     },
                     "404": {
                         "description": "Dictionary not found (identifier not known)"
@@ -275,6 +311,9 @@
                     "301": {
                         "description": "ID Updated (this entry has changed its ID)"
                     },
+                    "403": {
+                        "$ref": "#/components/unauthorized"
+                    },
                     "404": {
                         "description": "No Entry Availble (the dictionary or entry ID is not known or the entry has been deleted)"
                     },
@@ -301,6 +340,12 @@
                         "schema": {
                             "type": "string"
                         }
+                    }, {
+                        "required": false,
+                        "in": "header",
+                        "type": "string",
+                        "name": "X-API-KEY",
+                        "description": "An API key to authorize access to this endpoint if necessary"
                     }
                 ], 
                 "operationId": "getEntryById"
@@ -328,6 +373,9 @@
                     "301": {
                         "description": "ID Updated (this entry has changed its ID)"
                     },
+                    "403": {
+                        "$ref": "#/components/unauthorized"
+                    },
                     "404": {
                         "description": "No Entry Availble (the dictionary or entry ID is not known or the entry has been deleted)"
                     },
@@ -353,6 +401,12 @@
                         "schema": {
                             "type": "string"
                         }
+                    }, {
+                        "required": false,
+                        "in": "header",
+                        "type": "string",
+                        "name": "X-API-KEY",
+                        "description": "An API key to authorize access to this endpoint if necessary"
                     }
                 ], 
                 "operationId": "getEntryById"
@@ -384,6 +438,9 @@
                     "301": {
                         "description": "ID Updated (this entry has changed its ID)"
                     },
+                    "403": {
+                        "$ref": "#/components/unauthorized"
+                    },
                     "404": {
                         "description": "No Entry Availble (the dictionary or entry ID is not known or the entry has been deleted)"
                     },
@@ -409,6 +466,12 @@
                         "schema": {
                             "type": "string"
                         }
+                    }, {
+                        "required": false,
+                        "in": "header",
+                        "type": "string",
+                        "name": "X-API-KEY",
+                        "description": "An API key to authorize access to this endpoint if necessary"
                     }
                 ], 
                 "operationId": "getEntryById"
@@ -1027,6 +1090,9 @@
                     }
                 }
             }
+        },
+        "unauthorized": {
+            "description": "Forbidden (API key not specified or not valid)"
         }
 
     }, 
