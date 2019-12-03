@@ -10,6 +10,10 @@
         "license": {
             "name": "Public Domain",
             "url": "https://creativecommons.org/publicdomain/zero/1.0/"
+        },
+        "x-logo": {
+            "url": "logo.jpeg",
+            "altText": "ELEXIS European Lexicographic Infrasturcture"
         }
     }, 
     "paths": {

@@ -10,43 +10,13 @@
         "license": {
             "name" : "Public Domain",
             "url": "https://creativecommons.org/publicdomain/zero/1.0/"
+        },
+        "x-logo": {
+            "url": "logo.jpeg",
+            "altText": "ELEXIS European Lexicographic Infrasturcture"
         }
     }, 
     "paths": {
-        "/link": {
-            "post": {
-                "summary": "Link two dictionaries",
-                "description": "Link the senses of two dictionaries from two endpoints implemented the ELEXIS dictionary access protocol. This protocol requires the connection to be maintained until the linking is complete so is suitable for small tasks, e.g., single entry linking.",
-                "requestBody": {
-                    "description": "Linking task description",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/task"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/linking"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "$ref": "#/components/server_error"
-                    },
-                    "501": {
-                        "$ref": "#/components/not_supported"
-                    }
-                }
-            }
-        },
         "/submit": {
             "post": {
                 "summary": "Submit a linking task",
@@ -89,13 +59,13 @@
         "/status" : {
             "post": {
                 "summary": "Get the status of a linking task",
-                "description": "Returns the status of a task submitted with /submit, including whether it has failed or completed",
+                "description": "Returns the status of a task submitted with <tt>/submit</tt>, including whether it has failed or completed",
                 "requestBody": {
                     "content": {
                         "text/plain": {
                             "schema": {
                                 "type": "string",
-                                "description": "The ID as returned by submit"
+                                "description": "The ID as returned by <tt>submit</tt>"
                             }
                         }
                     }
@@ -127,7 +97,7 @@
                         "text/plain": {
                             "schema": {
                                 "type": "string",
-                                "description": "The ID as returned by submit"
+                                "description": "The ID as returned by <tt>submit</tt>"
                             }
                         }
                     }
@@ -156,6 +126,78 @@
                     }
                 }
             }
+        },
+        "/upload": {
+            "put": {
+                "summary": "Add a dictionary locally",
+                "description": "Put a dictionary locally so that it may be accessed by the linking service. If the dictionary does not implement the REST API this must be called before submitting a linking job",
+                "requestBody": {
+                    "content": {
+                        "text/xml": {
+                            "schema": {
+                                "description": "An XML document conforming to the <a href=\"https://dariah-eric.github.io/lexicalresources/pages/TEILex0/TEILex0.html\">TEI-Lex0 specification</a> and the ELEXIS data model"
+                            }
+                        }
+                    }
+                },
+                "parameters": [{
+                    "in": "query",
+                    "name": "retain",
+                    "schema": {
+                        "type": "boolean"
+                    },
+                    "description": "If true the system will not remove this resource until the delete operation is called. If false the system should remove this resource after it has been used for a single linking. If omitted the behaviour is not defined"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/upload_confirm"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request. The XML document is not valid",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "description": "An explanation of the error with the document"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/remove/{id}": {
+            "delete": {
+                "summary": "Remove a dictionary locally",
+                "description": "Indicates to the linking service that there is no longer a need to retain a dictionary and this may be safely removed",
+                "parameters": [{
+                    "in": "path",
+                    "name": "id",
+                    "required": true,
+                    "description": "The identifier as returned by the <tt>/upload</tt> action"
+                },{
+                    "in": "query",
+                    "name": "key",
+                    "description": "The key as returned by the <tt>/upload</tt> action. This may not be returned or required according to the client implementation"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "401": {
+                        "description": "Not authorized. The key was not correct"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -163,10 +205,10 @@
             "properties": {
                 "source": {
                     "description": "The source dictionary",
+                    "type": "object",
                     "properties": {
-
                         "endpoint": {
-                            "description": "The endpoint (an implementation of the ELEXIS REST protocol), where the source dictionary is available",
+                            "description": "The endpoint (an implementation of the ELEXIS REST protocol), where the source dictionary is available or omitted if the dictionary is available locally",
                             "type": "string",
                             "format": "uri"
                         },
@@ -189,13 +231,14 @@
                             "type": "string"
                         }
                     },
-                    "required": ["endpoint","id"]
+                    "required": ["id"]
                 },
                 "target": {
                     "description": "The target dictionary",
+                    "type": "object",
                     "properties": {
                         "endpoint": {
-                            "description": "The endpoint (an implementation of the ELEXIS REST protocol), where the target dictionary is available",
+                            "description": "The endpoint (an implementation of the ELEXIS REST protocol), where the target dictionary is available or omitted if the dictionary is available locally",
                             "type": "string",
                             "format": "uri"
                         },
@@ -213,7 +256,7 @@
                             }
                         }
                     },
-                    "required": ["endpoint","id"]
+                    "required": ["id"]
                 },
                 "configuration": {
                     "description": "An implementation specific configuration object",
@@ -228,7 +271,6 @@
                     "entries": [ "cat-n", "dog-n", "work-v" ]
                 },
                 "target": {
-                    "endpoint": "http://babelnet.org/elexis/",
                     "id": "babelnet"
                 },
                 "configuration": {
@@ -301,7 +343,7 @@
                     "linking": [{
                         "source_sense": "sense1",
                         "target_sense": "00015267n", 
-                        "type": "exact",
+                        "type": "exact"
                     }]
                 }]
             }
@@ -325,6 +367,18 @@
             "example": {
                 "state": "PROCESSING",
                 "message": "Still working away"
+            }
+        },
+        "upload_confirm": {
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "The identifier of the resource"
+                },
+                "key": {
+                    "type": "string",
+                    "description": "A secret key that can be used to delete this resource"
+                }
             }
         },
         "server_error": {
@@ -354,5 +408,3 @@
     },
     "openapi": "3.0.0"
 }
-
-
