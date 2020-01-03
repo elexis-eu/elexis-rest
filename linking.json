@@ -221,6 +221,7 @@
                     "linking": {
                         "type": "array",
                         "items": {
+                            "type": "object",
                             "properties": {
                                 "source_sense": {
                                     "description": "The ID of the source sense",
