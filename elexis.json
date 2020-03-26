@@ -24,8 +24,8 @@
                 "parameters": [{
                     "required": false,
                     "in": "header",
-                    "type": "string",
                     "name": "X-API-KEY",
+                    "schema": { "type": "string" },
                     "description": "An API key to authorize access to this endpoint if necessary"
                 }],
                 "responses": {
@@ -52,10 +52,10 @@
                         }
                     },
                     "403": {
-                        "$ref": "#/components/unauthorized"
+                        "$ref": "#/components/responses/unauthorized"
                     },
                     "500": { 
-                        "$ref": "#/components/server_error"
+                        "$ref": "#/components/responses/server_error"
                     }
                 },
                 "operationId": "dictionaries"
@@ -77,8 +77,8 @@
                     }, {
                         "required": false,
                         "in": "header",
-                        "type": "string",
                         "name": "X-API-KEY",
+                        "schema": { "type": "string" },
                         "description": "An API key to authorize access to this endpoint if necessary"
                     }
                 ],
@@ -97,10 +97,10 @@
                         "description": "Dictionary not found (identifier not known)"
                     },
                     "403": {
-                        "$ref": "#/components/unauthorized"
+                        "$ref": "#/components/responses/unauthorized"
                     },
                     "500": {
-                        "$ref": "#/components/server_error"
+                        "$ref": "#/components/responses/server_error"
                     }
                 },
                 "operationId": "about"
@@ -143,8 +143,8 @@
                     }, {
                         "required": false,
                         "in": "header",
-                        "type": "string",
                         "name": "X-API-KEY",
+                        "schema": { "type": "string" },
                         "description": "An API key to authorize access to this endpoint if necessary"
                     }
                 ],
@@ -166,10 +166,10 @@
                         "description": "Dictionary not found (identifier not known)"
                     },
                     "403": {
-                        "$ref": "#/components/unauthorized"
+                        "$ref": "#/components/responses/unauthorized"
                     },
                     "500": {
-                        "$ref": "#/components/server_error"
+                        "$ref": "#/components/responses/server_error"
                     }
                 },
                  "operationId": "getAll"
@@ -192,7 +192,7 @@
                     {
                         "required": true, 
                         "in": "path", 
-                        "name": "lemma", 
+                        "name": "headword", 
                         "description": "The lemma of the headword to lookup",
                         "schema": {
                             "type": "string"
@@ -259,8 +259,8 @@
                     }, {
                         "required": false,
                         "in": "header",
-                        "type": "string",
                         "name": "X-API-KEY",
+                        "schema": { "type": "string" },
                         "description": "An API key to authorize access to this endpoint if necessary"
                     }
                 ], 
@@ -279,13 +279,13 @@
                         "description": "The entries matching with this query"
                     },
                     "403": {
-                        "$ref": "#/components/unauthorized"
+                        "$ref": "#/components/responses/unauthorized"
                     },
                     "404": {
                         "description": "Dictionary not found (identifier not known)"
                     },
                     "500": {
-                        "$ref": "#/components/server_error"
+                        "$ref": "#/components/responses/server_error"
                     }
                  }, 
                  "operationId": "getByLemma"
@@ -300,7 +300,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/ontolex/entry"
+                                    "$ref": "#/components/schemas/ontolex_entry"
                                 }
                             }
                         },
@@ -316,13 +316,13 @@
                         "description": "ID Updated (this entry has changed its ID)"
                     },
                     "403": {
-                        "$ref": "#/components/unauthorized"
+                        "$ref": "#/components/responses/unauthorized"
                     },
                     "404": {
                         "description": "No Entry Availble (the dictionary or entry ID is not known or the entry has been deleted)"
                     },
                     "500": {
-                        "$ref": "#/components/server_error"
+                        "$ref": "#/components/responses/server_error"
                     }
  
                 }, 
@@ -347,8 +347,8 @@
                     }, {
                         "required": false,
                         "in": "header",
-                        "type": "string",
                         "name": "X-API-KEY",
+                        "schema": { "type": "string" },
                         "description": "An API key to authorize access to this endpoint if necessary"
                     }
                 ], 
@@ -378,13 +378,13 @@
                         "description": "ID Updated (this entry has changed its ID)"
                     },
                     "403": {
-                        "$ref": "#/components/unauthorized"
+                        "$ref": "#/components/responses/unauthorized"
                     },
                     "404": {
                         "description": "No Entry Availble (the dictionary or entry ID is not known or the entry has been deleted)"
                     },
                     "500": {
-                        "$ref": "#/components/server_error"
+                        "$ref": "#/components/responses/server_error"
                     }
  
                 }, 
@@ -408,12 +408,12 @@
                     }, {
                         "required": false,
                         "in": "header",
-                        "type": "string",
                         "name": "X-API-KEY",
+                        "schema": { "type": "string" },
                         "description": "An API key to authorize access to this endpoint if necessary"
                     }
                 ], 
-                "operationId": "getEntryById"
+                "operationId": "getEntryAsOntoLexById"
             }
         },
         "/tei/{dictionary}/{id}": {
@@ -443,13 +443,13 @@
                         "description": "ID Updated (this entry has changed its ID)"
                     },
                     "403": {
-                        "$ref": "#/components/unauthorized"
+                        "$ref": "#/components/responses/unauthorized"
                     },
                     "404": {
                         "description": "No Entry Availble (the dictionary or entry ID is not known or the entry has been deleted)"
                     },
                     "500": {
-                        "$ref": "#/components/server_error"
+                        "$ref": "#/components/responses/server_error"
                     }
  
                 }, 
@@ -473,12 +473,12 @@
                     }, {
                         "required": false,
                         "in": "header",
-                        "type": "string",
                         "name": "X-API-KEY",
+                        "schema": { "type": "string" },
                         "description": "An API key to authorize access to this endpoint if necessary"
                     }
                 ], 
-                "operationId": "getEntryById"
+                "operationId": "getEntryAsTEIById"
             }
         } 
     }, 
@@ -494,12 +494,10 @@
                             "RESEARCH", 
                             "PRIVATE"
                         ], 
-                        "required": "true",
                         "type": "string"
                     }, 
                     "lemma": {
                         "description": "The lemma of this identifier",
-                        "required": true, 
                         "type": "string"
                     }, 
                     "language": {
@@ -510,7 +508,6 @@
                     }, 
                     "id": {
                         "description": "A unique identifier for the entry",
-                        "required": true, 
                         "type": "string"
                     }, 
                     "partOfSpeech": {
@@ -556,7 +553,8 @@
                         }
                     }
                 }, 
-                "type": "object"
+                "type": "object",
+                "required": ["release", "lemma", "id"]
             }, 
             "agent": {
                 "type": "object",
@@ -627,15 +625,13 @@
                             "RESEARCH", 
                             "PRIVATE"
                         ], 
-                        "required": true,
                         "type": "string"
                     }, 
                     "sourceLanguage": {
                         "type": "string",
                         "description": "The language of the lemmas in the dictionary, as an ISO 639-1,2,3 code. If a (two-letter) ISO 639-1 code exists this should be used in preference",
                         "pattern": "\\w{2,3}", 
-                        "example": "en",
-                        "required": true
+                        "example": "en"
                     },
                     "targetLanguage": {
                         "type": "array",
@@ -646,14 +642,12 @@
                             "description": "A language code following the ISO 639-1,2,3 standard. If a (two-letter) ISO 639-1 code exists this should be used in preference",
                             "pattern": "\\w{2,3}", 
                             "type": "string",
-                            "required": true,
                             "example": "en"
                         },
                         "example": ["en", "de"]
                     },
                     "genre": {
                         "type": "array",
-                        "required": true,
                         "items": {
                             "type": "string",
                             "enum": [
@@ -672,19 +666,16 @@
                     },
                     "license": {
                         "description": "The license that can be used to republish this data",
-                        "required": "true",
                         "pattern": "https?:.*",
                         "example": "https://creativecommons.org/licenses/by/4.0/"
                     },
                     "title": {
                         "description": "The title of the resource",
-                        "required": "true",
                         "type": "string",
                         "example": "The Human-Readable Name of This Resource"
                     },
                     "creator": {
                         "description": "The creator of the resource",
-                        "required": "true",
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/agent"
@@ -696,7 +687,6 @@
                     },
                     "publisher": {
                         "description": "The publisher of This Resource",
-                        "required": "true",
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/agent"
@@ -707,52 +697,42 @@
                     },
 	            "abstract": {
                         "description": "A summary of the resource.",
-                        "required": false,
                         "type": "string"
                     },
                     "accrualMethod": {
                         "description": "The method by which items are added to a collection.",
-                        "required": false,
                         "type": "string"
                     },
                     "accrualPeriodicity": {
                         "description": "The frequency with which items are added to a collection.",
-                        "required": false,
                         "type": "string"
                     },
                     "accrualPolicy": {
                         "description": "The policy governing the addition of items to a collection.",
-                        "required": false,
                         "type": "string"
                     },
                     "alternative": {
                         "description": "An alternative name for the resource.",
-                        "required": false,
                         "type": "string"
                     },
                     "audience": {
                         "description": "A class of entity for whom the resource is intended or useful.",
-                        "required": false,
                         "type": "string"
                     },
                     "available": {
                         "description": "Date that the resource became or will become available.",
-                        "required": false,
                         "type": "date"
                     },
                     "bibliographicCitation": {
                         "description": "A bibliographic reference for the resource.",
-                        "required": false,
                         "type": "string"
                     },
                     "conformsTo": {
                         "description": "An established standard to which the described resource conforms.",
-                        "required": false,
                         "type": "string"
                     },
                     "contributor": {
                         "description": "An entity responsible for making contributions to the resource.",
-                        "required": false,
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/agent"
@@ -760,112 +740,90 @@
                     },
                     "coverage": {
                         "description": "The spatial or temporal topic of the resource, the spatial applicability of the resource, or the jurisdiction under which the resource is relevant.",
-                        "required": false,
                         "type": "string"                    
                     },
                     "created": {
                         "description": "Date of creation of the resource.",
-                        "required": false,
                         "type": "date"
                     },
                     "date": {
                         "description": "A point or period of time associated with an event in the lifecycle of the resource.",
-                        "required": false,
                         "type": "date-time"
                     },
                     "dateAccepted": {
                         "description": "Date of acceptance of the resource.",
-                        "required": false,
                         "type": "date"
                     },
                     "dateCopyrighted": {
                         "description": "Date of copyright.",
-                        "required": false,
                         "type": "date"
                     },
                     "dateSubmitted": {
                         "description": "Date of submission of the resource.",
-                        "required": false,
                         "type": "date"
                     },
                     "description": {
                         "description": "An account of the resource.",
-                        "required": false,
                         "type": "string"
                     },
                     "educationLevel": {
                         "description": "A class of entity, defined in terms of progression through an educational or training context, for which the described resource is intended.",
-                        "required": false,
                         "type": "string"
                     },
                     "extent": {
                         "description": "The size or duration of the resource.",
-                        "required": false,
                         "type": "string"
                     },
                     "hasFormat": {
                         "description": "A related resource that is substantially the same as the pre-existing described resource, but in another format.",
-                        "required": false,
                         "type": "string"
                     },
                     "hasPart": {
                         "description": "A related resource that is included either physically or logically in the described resource.",
-                        "required": false,
                         "type": "string"
                     },
                     "hasVersion": {
                         "description": "A related resource that is a version, edition, or adaptation of the described resource.",
-                        "required": false,
                         "type": "string"
                     },
                     "identifier": {
                         "description": "An unambiguous reference to the resource within a given context.",
-                        "required": false,
                         "type": "string"
                     },
                     "instructionalMethod": {
                         "description": "A process, used to engender knowledge, attitudes and skills, that the described resource is designed to support.",
-                        "required": false,
                         "type": "string"
                     },
                     "isFormatOf": {
                         "description": "A related resource that is substantially the same as the described resource, but in another format.",
-                        "required": false,
                         "type": "string"
                     },
                     "isPartOf": {
                         "description": "A related resource in which the described resource is physically or logically included.",
-                        "required": false,
                         "type": "string"
                     },
                     "isReferencedBy": {
                         "description": "A related resource that references, cites, or otherwise points to the described resource.",
-                        "required": false,
                         "type": "string"
                     },
                     "isReplacedBy": {
                         "description": "A related resource that supplants, displaces, or supersedes the described resource.",
-                        "required": false,
                         "type": "string"
                     },
                     "isRequiredBy": {
                         "description": "A related resource that requires the described resource to support its function, delivery, or coherence.",
-                        "required": false,
                         "type": "string"
                     },
                     "issued": {
                         "description": "Date of formal issuance (e.g., publication) of the resource.",
-                        "required": false,
                         "type": "date"
                     },
                     "isVersionOf": {
                         "description": "A related resource of which the described resource is a version, edition, or adaptation.",
-                        "required": false,
                         "type": "string"
                     },
                     "mediator": {
                         "description": "An entity that mediates access to the resource and for whom the resource is intended or useful.",
-                        "required": false,
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/agent-class"
@@ -873,42 +831,34 @@
                     },
                     "modified": {
                         "description": "Date on which the resource was changed.",
-                        "required": false,
                         "type": "date"
                     },
                     "provenance": {
                         "description": "A statement of any changes in ownership and custody of the resource since its creation that are significant for its authenticity, integrity, and interpretation.",
-                        "required": false,
                         "type": "string"
                     },
                     "references": {
                         "description": "A related resource that is referenced, cited, or otherwise pointed to by the described resource.",
-                        "required": false,
                         "type": "string"
                     },
                     "relation": {
                         "description": "A related resource.",
-                        "required": false,
                         "type": "string"
                     },
                     "replaces": {
                         "description": "A related resource that is supplanted, displaced, or superseded by the described resource.",
-                        "required": false,
                         "type": "string"
                     },
                     "requires": {
                         "description": "A related resource that is required by the described resource to support its function, delivery, or coherence.",
-                        "required": false,
                         "type": "string"
                     },
                     "rights": {
                         "description": "Information about rights held in and over the resource.",
-                        "required": false,
                         "type": "string"
                     },
                     "rightsHolder": {
                         "description": "A person or organization owning or managing rights over the resource.",
-                        "required": false,
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/agent"
@@ -916,49 +866,40 @@
                     },
                     "source": {
                         "description": "A related resource from which the described resource is derived.",
-                        "required": false,
                         "type": "string"
                     },
                     "spatial": {
                         "description": "Spatial characteristics of the resource.",
-                        "required": false,
                         "type": "string"
                     },
                     "subject": {
                         "description": "The topic of the resource.",
-                        "required": false,
                         "type": "string"
                     },
                     "tableOfContents": {
                         "description": "A list of subunits of the resource.",
-                        "required": false,
                         "type": "string"
                     },
                     "temporal": {
                         "description": "Temporal characteristics of the resource.",
-                        "required": false,
                         "type": "string"
                     },
                     "type": {
                         "description": "The nature or genre of the resource.",
-                        "required": false,
                         "type": "string"
                     },
                     "valid": {
                         "description": "Date of validity of a resource.",
-                        "required": false,
                         "type": "date"
                     }
-               }
-            }
-        },
-        "ontolex": {
-            "entry": {
+               },
+               "required": ["release","sourceLanguage","targetLanguage","genre","license","title","creator","publisher"]
+            },
+            "ontolex_entry": {
                 "type": "object",
                 "properties": {
                     "@context": {
                         "type": "string",
-                        "required": "true",
                         "description": "The JSON-LD Context Document, which should be derived from the OntoLex JSON spec"
                     },
                     "@id": {
@@ -1010,7 +951,7 @@
                         "type": "array",
                         "description": "The other form property relates a lexical entry to a non-preferred (\"non-lemma\") form that realizes the given lexical entry.",
                         "items": {
-                            "$ref": "#/components/ontolex/Form"
+                            "$ref": "#/components/schemas/ontolex_Form"
                         }
                     },
                     "morphologicalPattern": {
@@ -1027,7 +968,7 @@
                         "type": "array",
                         "description": "The sense property relates a lexical entry to one of its lexical senses.",
                         "items": {
-                            "$ref": "#/components/ontolex/LexicalSense"
+                            "$ref": "#/components/schemas/ontolex_LexicalSense"
                         }
                     },
                     "usage": {
@@ -1047,10 +988,11 @@
                     "senses": [{
                         "definition": "An example OntoLex Entry"
                     }]
-                }
+                },
+                "required": ["@context", "@id", "@type", "canonicalForm", "senses"]
 
             },
-            "Form": {
+            "ontolex_Form": {
                 "type": "object",
                 "properties": {
                     "writtenRep": {
@@ -1062,7 +1004,7 @@
                     }
                 }
             },
-            "LexicalSense": {
+            "ontolex_LexicalSense": {
                 "type": "object",
                 "properties": {
                     "definition": {
@@ -1078,25 +1020,27 @@
                 }
             }
         },
-        "server_error": {
-            "description": "Internal Server Error",
-            "content": {
-                "application/json": {
-                    "schema": {
-                        "type": "object",
-                        "properties": {
-                            "message": {
-                                "type": "string",
-                                "description": "The error message as plain text",
-                                "example": "Something has gone terribly wrong..."
+        "responses": {
+            "server_error": {
+                "description": "Internal Server Error",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "message": {
+                                    "type": "string",
+                                    "description": "The error message as plain text",
+                                    "example": "Something has gone terribly wrong..."
+                                }
                             }
                         }
                     }
                 }
+            },
+            "unauthorized": {
+                "description": "Forbidden (API key not specified or not valid)"
             }
-        },
-        "unauthorized": {
-            "description": "Forbidden (API key not specified or not valid)"
         }
 
     }, 

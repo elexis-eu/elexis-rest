@@ -27,7 +27,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/task"
+                                "$ref": "#/components/schemas/task"
                             }
                         }
                     }
@@ -48,10 +48,10 @@
                         "description": "It was not possible to start a task with this ID, for example it is already in use"
                     },
                     "500": {
-                        "$ref": "#/components/server_error"
+                        "$ref": "#/components/responses/server_error"
                     },
                     "501": {
-                        "$ref": "#/components/not_supported"
+                        "$ref": "#/components/responses/not_supported"
                     }
                 }
             }
@@ -77,7 +77,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/status"
+                                    "$ref": "#/components/schemas/status"
                                 }
                             }
                         }
@@ -116,7 +116,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/linking"
+                                    "$ref": "#/components/schemas/linking"
                                 }
                             }
                         }
@@ -129,207 +129,211 @@
         }
     },
     "components": {
-        "task": { 
-            "properties": {
-                "source": {
-                    "description": "The source dictionary",
-                    "type": "object",
-                    "properties": {
-                        "endpoint": {
-                            "description": "The endpoint (an implementation of the ELEXIS REST protocol), where the source dictionary is available or omitted if the dictionary is available locally",
-                            "type": "string",
-                            "format": "uri"
-                        },
-                        "id" : {
-                            "description": "The identifier of the source dictionary to be linked, as it is specified by the source endpoint",
-                            "type": "string"
-                        },
-                        "entries": {
-                            "description": "The list of source entries to link by their ID in the endpoint. If empty all entries are linked",
-                            "type": "array",
-                            "minItems": 1,
-                            "uniqueItems": true,
-                            "items": {
-                                "type": "string"
-                            }
-
-                        },
-                        "apiKey": {
-                            "description": "A key to be used to access the dictionary, to be passed as an X-API-KEY header",
-                            "type": "string"
-                        }
-                    },
-                    "required": ["id"]
-                },
-                "target": {
-                    "description": "The target dictionary",
-                    "type": "object",
-                    "properties": {
-                        "endpoint": {
-                            "description": "The endpoint (an implementation of the ELEXIS REST protocol), where the target dictionary is available or omitted if the dictionary is available locally",
-                            "type": "string",
-                            "format": "uri"
-                        },
-                        "id" : {
-                            "description": "The identifier of the source dictionary to be linked, as it is specified by the source endpoint",
-                            "type": "string"
-                        },
-                        "entries": {
-                            "description": "The list of target entries to link by their ID in the endpoint. If empty all entries are linked",
-                            "type": "array",
-                            "minItems": 1,
-                            "uniqueItems": true,
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "required": ["id"]
-                },
-                "configuration": {
-                    "description": "An implementation specific configuration object",
-                    "type": "object"
-                }
-            },
-            "required": ["source","target"],
-            "example": {
-                "source": {
-                    "endpoint": "http://elex.is/lexonomy/",
-                    "id": "my_dictionary",
-                    "entries": [ "cat-n", "dog-n", "work-v" ]
-                },
-                "target": {
-                    "id": "babelnet"
-                },
-                "configuration": {
-                    "some": "application specific values"
-                }
-            }
-        },
-        "linking": {
-            "type": "array",
-            "items": {
+        "schemas": {
+            "task": { 
                 "properties": {
-                    "source_entry": {
-                        "description": "The ID of the source entry",
-                        "type": "string"
-                    },
-                    "target_entry": {
-                        "description": "The ID of the target entry",
-                        "type": "string"
-                    },
-                    "linking": {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "properties": {
-                                "source_sense": {
-                                    "description": "The ID of the source sense",
-                                    "type": "string"
-                                },
-                                "target_sense": {
-                                    "description": "The ID of the target sense",
-                                    "type": "string"
-                                },
-                                "type": {
-                                    "description": "The kind of link",
-                                    "enum": [
-                                        "exact",
-                                        "broader",
-                                        "narrower",
-                                        "related"
-                                    ]
-                                },
-                                "score": {
-                                    "description": "The score of the linking",
-                                    "type": "number",
-                                    "minimum": 0,
-                                    "maximum": 1
-                                }
+                    "source": {
+                        "description": "The source dictionary",
+                        "type": "object",
+                        "properties": {
+                            "endpoint": {
+                                "description": "The endpoint (an implementation of the ELEXIS REST protocol), where the source dictionary is available or omitted if the dictionary is available locally",
+                                "type": "string",
+                                "format": "uri"
                             },
-                            "required": ["source_sense","target_sense","type"]
-                        }
+                            "id" : {
+                                "description": "The identifier of the source dictionary to be linked, as it is specified by the source endpoint",
+                                "type": "string"
+                            },
+                            "entries": {
+                                "description": "The list of source entries to link by their ID in the endpoint. If empty all entries are linked",
+                                "type": "array",
+                                "minItems": 1,
+                                "uniqueItems": true,
+                                "items": {
+                                    "type": "string"
+                                }
+
+                            },
+                            "apiKey": {
+                                "description": "A key to be used to access the dictionary, to be passed as an X-API-KEY header",
+                                "type": "string"
+                            }
+                        },
+                        "required": ["id"]
+                    },
+                    "target": {
+                        "description": "The target dictionary",
+                        "type": "object",
+                        "properties": {
+                            "endpoint": {
+                                "description": "The endpoint (an implementation of the ELEXIS REST protocol), where the target dictionary is available or omitted if the dictionary is available locally",
+                                "type": "string",
+                                "format": "uri"
+                            },
+                            "id" : {
+                                "description": "The identifier of the source dictionary to be linked, as it is specified by the source endpoint",
+                                "type": "string"
+                            },
+                            "entries": {
+                                "description": "The list of target entries to link by their ID in the endpoint. If empty all entries are linked",
+                                "type": "array",
+                                "minItems": 1,
+                                "uniqueItems": true,
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "required": ["id"]
+                    },
+                    "configuration": {
+                        "description": "An implementation specific configuration object",
+                        "type": "object"
                     }
                 },
-                "required": ["source_entry","target_entry","linking"],
-                "example": [{
-                    "source_entry": "cat-n",
-                    "target_entry": "cat-EN",
-                    "linking": [{
-                        "source_sense": "sense1",
-                        "target_sense": "00016606n", 
-                        "type": "exact",
-                        "score": 0.8
-                    },{
-                        "source_sense": "sense2",
-                        "target_sense": "00001844n", 
-                        "type": "broader",
-                        "score": 0.2
-                    }]
-                },{
-                    "source_entry": "dog-n",
-                    "target_entry": "dog-EN",
-                    "linking": [{
-                        "source_sense": "sense1",
-                        "target_sense": "00015267n", 
-                        "type": "exact"
-                    }]
-                }]
-            }
-        },
-        "status": {
-            "properties": {
-                "state": {
-                    "description": "What state the task is in",
-                    "enum": [
-                        "PROCESSING",
-                        "COMPLETED",
-                        "FAILED"
-                    ]
-                },
-                "message": {
-                    "description": "Any informative messages to show the user about the processing",
-                    "type": "string"
+                "required": ["source","target"],
+                "example": {
+                    "source": {
+                        "endpoint": "http://elex.is/lexonomy/",
+                        "id": "my_dictionary",
+                        "entries": [ "cat-n", "dog-n", "work-v" ]
+                    },
+                    "target": {
+                        "id": "babelnet"
+                    },
+                    "configuration": {
+                        "some": "application specific values"
+                    }
                 }
             },
-            "required": ["state"],
-            "example": {
-                "state": "PROCESSING",
-                "message": "Still working away"
-            }
-        },
-        "upload_confirm": {
-            "properties": {
-                "id": {
-                    "type": "string",
-                    "description": "The identifier of the resource"
-                },
-                "key": {
-                    "type": "string",
-                    "description": "A secret key that can be used to delete this resource"
+            "linking": {
+                "type": "array",
+                "items": {
+                    "properties": {
+                        "source_entry": {
+                            "description": "The ID of the source entry",
+                            "type": "string"
+                        },
+                        "target_entry": {
+                            "description": "The ID of the target entry",
+                            "type": "string"
+                        },
+                        "linking": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "source_sense": {
+                                        "description": "The ID of the source sense",
+                                        "type": "string"
+                                    },
+                                    "target_sense": {
+                                        "description": "The ID of the target sense",
+                                        "type": "string"
+                                    },
+                                    "type": {
+                                        "description": "The kind of link",
+                                        "enum": [
+                                            "exact",
+                                            "broader",
+                                            "narrower",
+                                            "related"
+                                        ]
+                                    },
+                                    "score": {
+                                        "description": "The score of the linking",
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 1
+                                    }
+                                },
+                                "required": ["source_sense","target_sense","type"]
+                            }
+                        }
+                    },
+                    "required": ["source_entry","target_entry","linking"],
+                    "example": [{
+                        "source_entry": "cat-n",
+                        "target_entry": "cat-EN",
+                        "linking": [{
+                            "source_sense": "sense1",
+                            "target_sense": "00016606n", 
+                            "type": "exact",
+                            "score": 0.8
+                        },{
+                            "source_sense": "sense2",
+                            "target_sense": "00001844n", 
+                            "type": "broader",
+                            "score": 0.2
+                        }]
+                    },{
+                        "source_entry": "dog-n",
+                        "target_entry": "dog-EN",
+                        "linking": [{
+                            "source_sense": "sense1",
+                            "target_sense": "00015267n", 
+                            "type": "exact"
+                        }]
+                    }]
                 }
-            }
-        },
-        "server_error": {
-            "description": "Internal Server Error",
-            "content": {
-                "text/plain": {
-                    "schema": {
+            },
+            "status": {
+                "properties": {
+                    "state": {
+                        "description": "What state the task is in",
+                        "enum": [
+                            "PROCESSING",
+                            "COMPLETED",
+                            "FAILED"
+                        ]
+                    },
+                    "message": {
+                        "description": "Any informative messages to show the user about the processing",
+                        "type": "string"
+                    }
+                },
+                "required": ["state"],
+                "example": {
+                    "state": "PROCESSING",
+                    "message": "Still working away"
+                }
+            },
+            "upload_confirm": {
+                "properties": {
+                    "id": {
                         "type": "string",
-                        "description": "The error message as plain text",
-                        "example": "Something has gone terribly wrong..."
+                        "description": "The identifier of the resource"
+                    },
+                    "key": {
+                        "type": "string",
+                        "description": "A secret key that can be used to delete this resource"
                     }
                 }
             }
         },
-        "not_supported": {
-            "description": "The linking service does not support some part of the linking task specified.",
-            "content": {
-                "text/plain": {
-                    "schema": {
-                        "type": "string",
-                        "description": "The error message as plain text. This may occur because the linking service is limited in the endpoints it supports, the configuration is not appropriate or the server does not support one of the formats (XML/RDF/JSON) of the dictionary",
-                        "example": "Configuration not supported."
+        "responses": {
+            "server_error": {
+                "description": "Internal Server Error",
+                "content": {
+                    "text/plain": {
+                        "schema": {
+                            "type": "string",
+                            "description": "The error message as plain text",
+                            "example": "Something has gone terribly wrong..."
+                        }
+                    }
+                }
+            },
+            "not_supported": {
+                "description": "The linking service does not support some part of the linking task specified.",
+                "content": {
+                    "text/plain": {
+                        "schema": {
+                            "type": "string",
+                            "description": "The error message as plain text. This may occur because the linking service is limited in the endpoints it supports, the configuration is not appropriate or the server does not support one of the formats (XML/RDF/JSON) of the dictionary",
+                            "example": "Configuration not supported."
+                        }
                     }
                 }
             }
