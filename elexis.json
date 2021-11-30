@@ -550,7 +550,25 @@
                                 "SCONJ", 
                                 "SYM", 
                                 "VERB", 
-                                "X"
+                                "X",
+                                "adjective",
+                                "adposition",
+                                "adverb",
+                                "auxiliary",
+                                "coordinatingConjunction",
+                                "determiner",
+                                "interjection",
+                                "commonNoun",
+                                "numeral",
+                                "particle",
+                                "pronoun",
+                                "properNoun",
+                                "punctuation",
+                                "subordinatingConjunction",
+                                "symbol",
+                                "verb",
+                                "other"
+
                             ], 
                             "type": "string"
                         }
