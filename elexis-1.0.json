@@ -1,6 +1,6 @@
 {
     "info": {
-        "version": "1.1",
+        "version": "1.0",
         "title": "ELEXIS Protocol for accessing dictionaries",
         "description": "This protocol allows data to be shared with the ELEXIS platform and should be implemented by all providers of data to the ELEXIS platform. This is an OpenAPI documentation, for more details about using this specification, please refer to OpenAPI documentations: https://swagger.io/resources/articles/documenting-apis-with-swagger/",
         "contact": {
@@ -221,24 +221,7 @@
                                 "SCONJ", 
                                 "SYM", 
                                 "VERB", 
-                                "X",
-                                "adjective",
-                                "adposition",
-                                "adverb",
-                                "auxiliary",
-                                "coordinatingConjunction",
-                                "determiner",
-                                "interjection",
-                                "commonNoun",
-                                "numeral",
-                                "particle",
-                                "pronoun",
-                                "properNoun",
-                                "punctuation",
-                                "subordinatingConjunction",
-                                "symbol",
-                                "verb",
-                                "other"
+                                "X"
                             ], 
                             "type": "string"
                         }
@@ -550,24 +533,7 @@
                                 "SCONJ", 
                                 "SYM", 
                                 "VERB", 
-                                "X",
-                                "adjective",
-                                "adposition",
-                                "adverb",
-                                "auxiliary",
-                                "coordinatingConjunction",
-                                "determiner",
-                                "interjection",
-                                "commonNoun",
-                                "numeral",
-                                "particle",
-                                "pronoun",
-                                "properNoun",
-                                "punctuation",
-                                "subordinatingConjunction",
-                                "symbol",
-                                "verb",
-                                "other"
+                                "X"
                             ], 
                             "type": "string"
                         }
@@ -963,23 +929,6 @@
                         "type": "string",
                         "description": "The part of speech of the entry",
                         "enum": [
-                            "ADJ", 
-                            "ADP", 
-                            "ADV", 
-                            "AUX", 
-                            "CCONJ", 
-                            "DET", 
-                            "INTJ", 
-                            "NOUN", 
-                            "NUM", 
-                            "PART", 
-                            "PRON", 
-                            "PROPN", 
-                            "PUNCT", 
-                            "SCONJ", 
-                            "SYM", 
-                            "VERB", 
-                            "X",
                             "adjective",
                             "adposition",
                             "adverb",
