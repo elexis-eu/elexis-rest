@@ -729,6 +729,10 @@
                             "name": "Publishing Company"
                         }]
                     },
+	            "entryCount": {
+                        "description": "Number of entries in the dictionary.",
+                        "type": "integer"
+                    },
 	            "abstract": {
                         "description": "A summary of the resource.",
                         "type": "string"
