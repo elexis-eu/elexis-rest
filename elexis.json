@@ -1098,30 +1098,38 @@
                         "example": "http://dbpedia.org/resource/Example"
                     },
                     "example": {
-                        "type": "string",
-                        "description": "instance of a lexical item's usage in a specific sense"
+                        "type": "array",
+                        "minItems": 1,
+                        "items": {
+                            "type": "string",
+                            "description": "instance of a lexical item's usage in a specific sense"
+                        }
                     },
                     "indicator": {
                         "type": "string",
                         "description": "short statement that gives an indication of a meaning and permits its differentiation from other meanings within a sense structure of an entry"
                     },
                     "translation": {
-                        "type": "object",
-                        "description": "equivalent in another language of any element in an entry",
-                        "properties": {
-                            "text": {
-                                "type": "string",
-                                "description": "the text of the translation"
+                        "type": "array",
+                        "minItems": 1,
+                        "items": {
+                            "type": "object",
+                            "description": "equivalent in another language of any element in an entry",
+                            "properties": {
+                                "text": {
+                                    "type": "string",
+                                    "description": "the text of the translation"
+                                },
+                                "language": {
+                                    "type": "string",
+                                    "description": "the language of translation as an IETF BCP-47 language tag"
+                                }
                             },
-                            "language": {
-                                "type": "string",
-                                "description": "the language of translation as an IETF BCP-47 language tag"
+                            "required": ["text", "language"],
+                            "example": {
+                                "text": "Katze",
+                                "language": "en"
                             }
-                        },
-                        "required": ["text", "language"],
-                        "example": {
-                            "text": "Katze",
-                            "language": "en"
                         }
                     },
                     "note": {
